@@ -9,17 +9,17 @@
         .container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
         h1 { color: #333; margin-bottom: 1.5rem; }
         
-        /* New Input Style */
         input[type="text"] { width: 100%; padding: 15px; font-size: 18px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 20px; box-sizing: border-box; text-align: center; }
         input[type="text"]:focus { border-color: #28a745; outline: none; }
 
         button { width: 100%; padding: 15px; background-color: #28a745; color: white; border: none; border-radius: 8px; font-size: 20px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
         button:active { background-color: #218838; transform: scale(0.98); }
-        button:disabled { background-color: #ccc; }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
 
         .message { margin-top: 20px; font-size: 16px; padding: 10px; border-radius: 5px; display: none; }
         .success { background-color: #d4edda; color: #155724; }
         .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #cce5ff; color: #004085; }
     </style>
 </head>
 <body>
@@ -27,9 +27,10 @@
 <div class="container">
     <h1>📅 Check-In</h1>
     
-    <input type="text" id="nameInput" placeholder="Type your name here..." autocomplete="off">
+    <input type="text" id="nameInput" list="nameList" placeholder="Loading names..." disabled autocomplete="off">
+    <datalist id="nameList"></datalist>
 
-    <button id="submitBtn" onclick="markAttendance()">Submit</button>
+    <button id="submitBtn" onclick="markAttendance()" disabled>Loading...</button>
     
     <div id="statusMessage" class="message"></div>
 </div>
@@ -37,41 +38,76 @@
 <script>
     // 🔴 PASTE YOUR GOOGLE SCRIPT URL HERE 🔴
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzG30icN16IMqbDBBvCeiGdjnAyS2sTgrx6h5UiJkSke3qPVP4d_p-zG0TK9QcMcuhm/exec";
+    
+    // Store valid names here to check against later
+    let validNames = [];
 
+    // 1. INITIALIZE: Download the list of names
+    window.onload = function() {
+        const input = document.getElementById("nameInput");
+        const btn = document.getElementById("submitBtn");
+
+        fetch(SCRIPT_URL + "?action=getNames")
+        .then(response => response.json())
+        .then(data => {
+            validNames = data.data; // Save names to our local list
+            
+            // Populate the datalist so users get suggestions
+            const dataList = document.getElementById("nameList");
+            validNames.forEach(name => {
+                let option = document.createElement("option");
+                option.value = name;
+                dataList.appendChild(option);
+            });
+
+            // Unlock the UI
+            input.placeholder = "Type your name...";
+            input.disabled = false;
+            btn.innerHTML = "Submit";
+            btn.disabled = false;
+        })
+        .catch(error => {
+            showMessage("⚠️ Error loading database. Refresh page.", "error");
+        });
+    };
+
+    // 2. SUBMIT WITH VALIDATION
     function markAttendance() {
-        // Get the value and trim whitespace (spaces before/after)
         const nameInput = document.getElementById("nameInput");
         const name = nameInput.value.trim();
         const btn = document.getElementById("submitBtn");
 
+        // A. Check if empty
         if (name === "") {
             showMessage("⚠️ Please type your name.", "error");
             return;
         }
 
-        // UI Loading State
+        // B. STRICT VALIDATION: Check if name exists in our list
+        if (!validNames.includes(name)) {
+            showMessage("❌ Name not found! Please select from the list.", "error");
+            return;
+        }
+
+        // C. Send to Server
         btn.innerHTML = "Saving...";
         btn.disabled = true;
-        showMessage("", "success"); // clear previous messages
+        showMessage("", "success"); 
 
-        // Send Data to Google Sheet
         fetch(SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: "name=" + encodeURIComponent(name)
         })
         .then(() => {
-            // Success Logic
             showMessage("✅ Success! Welcome, " + name, "success");
             btn.innerHTML = "Submit";
             btn.disabled = false;
-            nameInput.value = ""; // Clear the box for the next person
+            nameInput.value = ""; 
         })
         .catch(error => {
-            showMessage("❌ Connection Failed. Try again.", "error");
+            showMessage("❌ Connection Failed.", "error");
             btn.innerHTML = "Submit";
             btn.disabled = false;
         });
