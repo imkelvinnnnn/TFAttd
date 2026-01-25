@@ -9,8 +9,10 @@
         .container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
         h1 { color: #333; margin-bottom: 1.5rem; }
         
-        select { width: 100%; padding: 15px; font-size: 18px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 20px; background-color: white; -webkit-appearance: none; }
-        
+        /* New Input Style */
+        input[type="text"] { width: 100%; padding: 15px; font-size: 18px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 20px; box-sizing: border-box; text-align: center; }
+        input[type="text"]:focus { border-color: #28a745; outline: none; }
+
         button { width: 100%; padding: 15px; background-color: #28a745; color: white; border: none; border-radius: 8px; font-size: 20px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
         button:active { background-color: #218838; transform: scale(0.98); }
         button:disabled { background-color: #ccc; }
@@ -18,22 +20,16 @@
         .message { margin-top: 20px; font-size: 16px; padding: 10px; border-radius: 5px; display: none; }
         .success { background-color: #d4edda; color: #155724; }
         .error { background-color: #f8d7da; color: #721c24; }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; display: none; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>📅 Attendance</h1>
+    <h1>📅 Check-In</h1>
     
-    <div id="loadingNames" class="loader" style="display:block"></div>
+    <input type="text" id="nameInput" placeholder="Type your name here..." autocomplete="off">
 
-    <select id="nameSelect" style="display:none">
-        <option value="" disabled selected>Select your name...</option>
-    </select>
-
-    <button id="submitBtn" onclick="markAttendance()" disabled>Confirm Check-In</button>
+    <button id="submitBtn" onclick="markAttendance()">Submit</button>
     
     <div id="statusMessage" class="message"></div>
 </div>
@@ -42,39 +38,18 @@
     // 🔴 PASTE YOUR GOOGLE SCRIPT URL HERE 🔴
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzG30icN16IMqbDBBvCeiGdjnAyS2sTgrx6h5UiJkSke3qPVP4d_p-zG0TK9QcMcuhm/exec";
 
-    // 1. Load names when page opens
-    window.onload = function() {
-        fetch(SCRIPT_URL + "?action=getNames")
-        .then(response => response.json())
-        .then(data => {
-            const select = document.getElementById("nameSelect");
-            data.data.forEach(name => {
-                let option = document.createElement("option");
-                option.text = name;
-                option.value = name;
-                select.add(option);
-            });
-            // UI Switch
-            document.getElementById("loadingNames").style.display = "none";
-            document.getElementById("nameSelect").style.display = "block";
-            document.getElementById("submitBtn").disabled = false;
-        })
-        .catch(error => {
-            showMessage("Error loading names. Please refresh.", "error");
-        });
-    };
-
-    // 2. Submit Attendance
     function markAttendance() {
-        const name = document.getElementById("nameSelect").value;
+        // Get the value and trim whitespace (spaces before/after)
+        const nameInput = document.getElementById("nameInput");
+        const name = nameInput.value.trim();
         const btn = document.getElementById("submitBtn");
 
         if (name === "") {
-            showMessage("Please select a name first!", "error");
+            showMessage("⚠️ Please type your name.", "error");
             return;
         }
 
-        // Show loading state
+        // UI Loading State
         btn.innerHTML = "Saving...";
         btn.disabled = true;
         showMessage("", "success"); // clear previous messages
@@ -82,25 +57,22 @@
         // Send Data to Google Sheet
         fetch(SCRIPT_URL, {
             method: 'POST',
-            mode: 'no-cors', // Important for Google Apps Script
+            mode: 'no-cors',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: "name=" + encodeURIComponent(name)
         })
         .then(() => {
-            // Because of 'no-cors', we can't read the response JSON perfectly, 
-            // but if it didn't fail network-wise, we assume success.
+            // Success Logic
             showMessage("✅ Success! Welcome, " + name, "success");
-            btn.innerHTML = "Confirm Check-In";
+            btn.innerHTML = "Submit";
             btn.disabled = false;
-            
-            // Optional: Reset dropdown
-            document.getElementById("nameSelect").value = "";
+            nameInput.value = ""; // Clear the box for the next person
         })
         .catch(error => {
-            showMessage("❌ Connection Failed.", "error");
-            btn.innerHTML = "Confirm Check-In";
+            showMessage("❌ Connection Failed. Try again.", "error");
+            btn.innerHTML = "Submit";
             btn.disabled = false;
         });
     }
