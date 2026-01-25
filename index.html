@@ -27,7 +27,7 @@
 <div class="container">
     <h1>📅 Check-In</h1>
     
-    <input type="text" id="nameInput" list="nameList" placeholder="Loading names..." disabled autocomplete="off">
+    <input type="text" id="nameInput" list="nameList" placeholder="名字加载钟..." disabled autocomplete="off">
     <datalist id="nameList"></datalist>
 
     <button id="submitBtn" onclick="markAttendance()" disabled>Loading...</button>
@@ -61,9 +61,9 @@
             });
 
             // Unlock the UI
-            input.placeholder = "Type your name...";
+            input.placeholder = "输入全名...";
             input.disabled = false;
-            btn.innerHTML = "Submit";
+            btn.innerHTML = "点名";
             btn.disabled = false;
         })
         .catch(error => {
@@ -79,18 +79,18 @@
 
         // A. Check if empty
         if (name === "") {
-            showMessage("⚠️ Please type your name.", "error");
+            showMessage("⚠️ 输入你的名字", "error");
             return;
         }
 
         // B. STRICT VALIDATION: Check if name exists in our list
         if (!validNames.includes(name)) {
-            showMessage("❌ Name not found! Please select from the list.", "error");
+            showMessage("❌ 名字不存在", "error");
             return;
         }
 
         // C. Send to Server
-        btn.innerHTML = "Saving...";
+        btn.innerHTML = "Loading...";
         btn.disabled = true;
         showMessage("", "success"); 
 
@@ -101,7 +101,7 @@
             body: "name=" + encodeURIComponent(name)
         })
         .then(() => {
-            showMessage("✅ Success! Welcome, " + name, "success");
+            showMessage("✅ 点名成功! 欢迎, " + name, "success");
             btn.innerHTML = "Submit";
             btn.disabled = false;
             nameInput.value = ""; 
