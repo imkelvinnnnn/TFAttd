@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin: Missing List</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #ffebee; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        
+        h1 { color: #d32f2f; text-align: center; margin-bottom: 5px; }
+        p.subtitle { text-align: center; color: #666; margin-bottom: 20px; }
+
+        .list-container { display: flex; flex-direction: column; gap: 10px; }
+        
+        /* The Name Card */
+        .person-card { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #fff;
+            transition: all 0.3s ease;
+        }
+        .person-name { font-size: 18px; font-weight: bold; color: #333; }
+        
+        /* The "Mark" Button */
+        .mark-btn { 
+            padding: 8px 16px; background-color: #d32f2f; color: white; border: none; 
+            border-radius: 6px; font-size: 14px; cursor: pointer; 
+        }
+        .mark-btn:active { background-color: #b71c1c; }
+
+        /* Empty State */
+        .empty-state { text-align: center; color: #2e7d32; font-size: 18px; font-weight: bold; display: none; padding: 20px; }
+
+        /* Loader */
+        .loader { text-align: center; margin-top: 20px; color: #666; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>⚠️ Missing List</h1>
+    <p class="subtitle" id="countDisplay">Checking...</p>
+
+    <div id="loader" class="loader">Loading data...</div>
+    <div id="emptyState" class="empty-state">🎉 Everyone is present!</div>
+    <div id="listContainer" class="list-container"></div>
+</div>
+
+<script>
+    // 🔴 PASTE YOUR SAME GOOGLE SCRIPT URL HERE 🔴
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzG30icN16IMqbDBBvCeiGdjnAyS2sTgrx6h5UiJkSke3qPVP4d_p-zG0TK9QcMcuhm/exec";
+
+    // Load missing people on start
+    window.onload = function() {
+        fetch(SCRIPT_URL + "?action=getMissing")
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("loader").style.display = "none";
+            
+            if (data.result === "error") {
+                alert("Error: " + data.message);
+                return;
+            }
+
+            renderList(data.data);
+        })
+        .catch(err => alert("Connection Failed"));
+    };
+
+    function renderList(names) {
+        const container = document.getElementById("listContainer");
+        const countDisplay = document.getElementById("countDisplay");
+        const emptyState = document.getElementById("emptyState");
+
+        // Update Count
+        countDisplay.innerText = names.length + " people outstanding";
+
+        // If everyone is here
+        if (names.length === 0) {
+            emptyState.style.display = "block";
+            return;
+        }
+
+        // Generate Buttons
+        names.forEach(name => {
+            let card = document.createElement("div");
+            card.className = "person-card";
+            card.id = "card-" + name; // Unique ID to remove it later
+
+            let nameSpan = document.createElement("span");
+            nameSpan.className = "person-name";
+            nameSpan.innerText = name;
+
+            let btn = document.createElement("button");
+            btn.className = "mark-btn";
+            btn.innerText = "Mark Present";
+            btn.onclick = function() { markPerson(name, btn); };
+
+            card.appendChild(nameSpan);
+            card.appendChild(btn);
+            container.appendChild(card);
+        });
+    }
+
+    function markPerson(name, btnElement) {
+        if(!confirm("Mark " + name + " as Present?")) return;
+
+        // UI Loading State
+        btnElement.innerText = "...";
+        btnElement.disabled = true;
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: "name=" + encodeURIComponent(name)
+        })
+        .then(() => {
+            // Success: Animate and Remove the card
+            const card = document.getElementById("card-" + name);
+            card.style.opacity = "0";
+            setTimeout(() => card.remove(), 300); // Wait for fade out
+            
+            // Update the counter
+            updateCount();
+        })
+        .catch(err => {
+            alert("Failed to mark attendance.");
+            btnElement.innerText = "Mark Present";
+            btnElement.disabled = false;
+        });
+    }
+
+    function updateCount() {
+        const countDisplay = document.getElementById("countDisplay");
+        const remaining = document.querySelectorAll(".person-card").length - 1; // -1 because we just removed one
+        
+        if (remaining <= 0) {
+            countDisplay.innerText = "0 people outstanding";
+            document.getElementById("emptyState").style.display = "block";
+        } else {
+            countDisplay.innerText = remaining + " people outstanding";
+        }
+    }
+</script>
+
+</body>
+</html>
