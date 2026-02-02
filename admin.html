@@ -6,122 +6,435 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TF Attendance Admin</title>
     <style>
+        :root {
+            --bg: #f3f4f6;
+            --surface: #ffffff;
+            --card: #ffffff;
+            --card-soft: #f9fafb;
+            --border-subtle: rgba(148, 163, 184, 0.35);
+            --primary: #2563eb;
+            --primary-soft: rgba(37, 99, 235, 0.08);
+            --primary-strong: #1d4ed8;
+            --accent: #16a34a;
+            --danger: #b91c1c;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #ffebee;
             margin: 0;
-            padding: 20px;
+            min-height: 100vh;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: radial-gradient(circle at top left, rgba(129, 140, 248, 0.25) 0, transparent 58%),
+                radial-gradient(circle at bottom right, rgba(45, 212, 191, 0.18) 0, transparent 55%),
+                var(--bg);
+            color: var(--text-main);
         }
 
-        .container {
-            max-width: 600px;
+        .page-shell {
+            max-width: 1120px;
             margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 16px 16px 24px;
         }
 
-        h1 {
-            color: #d32f2f;
-            text-align: center;
-            margin-bottom: 5px;
-        }
-
-        p.subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .list-container {
+        header.app-header {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 12px;
+        }
+
+        .brand-block {
+            display: flex;
+            align-items: center;
             gap: 10px;
         }
 
-        /* The Name Card */
+        .brand-logo {
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            background: conic-gradient(from 180deg, #22c55e, #22c55e, #2563eb, #22c55e);
+            padding: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-logo-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .brand-text-main {
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .brand-text-sub {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .header-meta {
+            text-align: right;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .header-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #e5edff;
+            border: 1px solid rgba(37, 99, 235, 0.45);
+            color: #1d4ed8;
+        }
+
+        .layout-main {
+            display: grid;
+            grid-template-columns: minmax(0, 3fr);
+            gap: 16px;
+        }
+
+        @media (min-width: 900px) {
+            .page-shell {
+                padding: 20px 20px 28px;
+            }
+
+            .layout-main {
+                grid-template-columns: minmax(0, 7fr) minmax(260px, 4fr);
+                align-items: flex-start;
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 18px;
+            padding: 16px 16px 18px;
+            border: 1px solid rgba(209, 213, 219, 0.9);
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .card-subtitle {
+            margin: 0;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        @media (min-width: 600px) {
+            .card {
+                padding: 18px 18px 20px;
+            }
+
+            .card-title {
+                font-size: 1.35rem;
+            }
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .btn {
+            appearance: none;
+            border: none;
+            border-radius: 999px;
+            padding: 9px 14px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.15s ease, transform 0.05s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .btn span.icon-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: #bbf7d0;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to bottom right, #2563eb, #1d4ed8);
+            color: #f9fafb;
+            box-shadow: 0 10px 26px rgba(37, 99, 235, 0.4);
+            border: 1px solid rgba(37, 99, 235, 0.7);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to bottom right, #1d4ed8, #1d4ed8);
+            transform: translateY(-1px);
+            box-shadow: 0 16px 36px rgba(37, 99, 235, 0.98);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 8px 22px rgba(37, 99, 235, 0.9);
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: var(--text-main);
+            border: 1px solid rgba(148, 163, 184, 0.6);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(15, 23, 42, 0.98);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(0);
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid rgba(248, 113, 113, 0.9);
+        }
+
+        .btn-danger:hover {
+            background: rgba(185, 28, 28, 1);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger:active {
+            transform: translateY(0);
+        }
+
+        .count-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 9px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            background: #eef2ff;
+            border: 1px solid rgba(129, 140, 248, 0.8);
+            color: #3730a3;
+        }
+
+        .subtitle {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin: 0 0 8px;
+        }
+
+        .loader {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            padding: 10px 0;
+        }
+
+        .empty-state {
+            display: none;
+            margin-top: 14px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: #ecfdf3;
+            border: 1px solid rgba(22, 163, 74, 0.4);
+            color: #166534;
+            font-size: 0.9rem;
+        }
+
+        .list-container {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
         .person-card {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background: #fff;
-            transition: all 0.3s ease;
+            padding: 8px 10px;
+            border-radius: 999px;
+            background: #f9fafb;
+            border: 1px solid rgba(209, 213, 219, 0.9);
+            transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease, opacity 0.2s ease;
+        }
+
+        .person-card:hover {
+            transform: translateY(-1px);
+            background: #eef2ff;
+            border-color: rgba(129, 140, 248, 0.9);
         }
 
         .person-name {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
+            font-size: 0.95rem;
         }
 
-        /* The "Mark" Button */
         .mark-btn {
-            padding: 8px 16px;
-            background-color: #d32f2f;
-            color: white;
+            border-radius: 999px;
             border: none;
-            border-radius: 6px;
-            font-size: 14px;
+            background: rgba(22, 163, 74, 0.14);
+            color: #15803d;
+            font-size: 0.8rem;
+            padding: 6px 10px;
             cursor: pointer;
+            transition: background 0.15s ease, transform 0.05s ease;
+        }
+
+        .mark-btn:hover {
+            background: rgba(22, 163, 74, 0.24);
+            transform: translateY(-1px);
         }
 
         .mark-btn:active {
-            background-color: #b71c1c;
+            transform: translateY(0);
         }
 
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            color: #2e7d32;
-            font-size: 18px;
-            font-weight: bold;
+        .stats-card {
+            background: var(--card-soft);
+            border-radius: 18px;
+            padding: 14px 14px 16px;
+            border: 1px solid rgba(209, 213, 219, 0.9);
+            box-shadow: 0 14px 36px rgba(15, 23, 42, 0.07);
+            font-size: 0.82rem;
+        }
+
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 6px;
+        }
+
+        .stats-title {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        .stats-body p {
+            margin: 2px 0;
+            color: var(--text-muted);
+        }
+
+        .stats-body strong {
+            color: var(--text-main);
+        }
+
+        #statsBox {
             display: none;
-            padding: 20px;
         }
 
-        /* Loader */
-        .loader {
-            text-align: center;
-            margin-top: 20px;
-            color: #666;
+        @media (min-width: 900px) {
+            .stats-card {
+                position: sticky;
+                top: 20px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container">
+    <div class="page-shell">
+        <header class="app-header">
+            <div class="brand-block">
+                <div class="brand-logo">
+                    <div class="brand-logo-inner">TF</div>
+                </div>
+                <div>
+                    <div class="brand-text-main">TF Attendance · Admin</div>
+                    <div class="brand-text-sub">管理少年团出席 · 今日缺席名单</div>
+                </div>
+            </div>
+            <div class="header-meta">
+                <span>
+                    <small>Today</small>
+                    <strong id="todayDate"></strong>
+                </span>
+            </div>
+        </header>
 
-        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <button onclick="markAllAbsent()"
-                style="flex: 1; background: #607d8b; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer;">Mark
-                Remaining Absent (0)</button>
-            <button onclick="generateStats()"
-                style="flex: 1; background: #1976d2; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer;">Generate
-                Stats</button>
-        </div>
+        <main class="layout-main">
+            <section class="card">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">⚠️ Missing List</h2>
+                        <p class="card-subtitle">Mark teens as present as they arrive.</p>
+                    </div>
+                    <div class="count-pill">
+                        <span id="countDisplay">Checking...</span>
+                    </div>
+                </div>
 
-        <div id="statsBox"
-            style="display:none; background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #bbdefb;">
-            <h3 style="margin-top: 0; color: #0d47a1;">
-                <span id="todayDate"></span> 少年团出席人数
-            </h3><br/>
-            <p>出席人数: <strong id="statTotal">0</strong><br/>
-            少年人: <strong id="statTeens">0</strong><br/>
-            志工和导师: <strong id="statMentors">0</strong></p>
-        </div>
-        <h1>⚠️ Missing List</h1>
-        <p class="subtitle" id="countDisplay">Checking...</p>
+                <div class="toolbar">
+                    <button class="btn btn-danger" onclick="markAllAbsent()">
+                        <span class="icon-dot"></span>
+                        <span>Mark remaining as 0</span>
+                    </button>
+                    <button class="btn btn-primary" onclick="generateStats()">
+                        <span class="icon-dot"></span>
+                        <span>Generate today’s stats</span>
+                    </button>
+                </div>
 
-        <div id="loader" class="loader">Loading data...</div>
-        <div id="emptyState" class="empty-state">🎉 Everyone is present!</div>
-        <div id="listContainer" class="list-container"></div>
+                <p class="subtitle">Only those who have not checked in yet will appear below.</p>
 
+                <div id="loader" class="loader">Loading data…</div>
+                <div id="emptyState" class="empty-state">🎉 Everyone is present! No one outstanding today.</div>
+                <div id="listContainer" class="list-container"></div>
+            </section>
 
+            <aside id="statsBox" class="stats-card">
+                <div class="stats-header">
+                    <h3 class="stats-title">今日出席统计</h3>
+                </div>
+                <div class="stats-body">
+                    <p>出席总人数: <strong id="statTotal">0</strong></p>
+                    <p>少年人: <strong id="statTeens">0</strong></p>
+                    <p>志工 &amp; 导师: <strong id="statMentors">0</strong></p>
+                </div>
+            </aside>
+        </main>
     </div>
 
     <script>
