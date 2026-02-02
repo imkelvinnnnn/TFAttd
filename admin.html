@@ -304,21 +304,25 @@
         .mark-btn {
             border-radius: 999px;
             border: none;
-            background: rgba(22, 163, 74, 0.14);
-            color: #15803d;
-            font-size: 0.8rem;
-            padding: 6px 10px;
+            background: rgba(22, 163, 74, 0.16);
+            color: #166534;
+            font-size: 0.9rem;
+            padding: 8px 14px;
+            min-width: 120px;
             cursor: pointer;
-            transition: background 0.15s ease, transform 0.05s ease;
+            transition: background 0.15s ease, transform 0.05s ease, box-shadow 0.15s ease;
+            box-shadow: 0 4px 10px rgba(22, 163, 74, 0.2);
         }
 
         .mark-btn:hover {
             background: rgba(22, 163, 74, 0.24);
             transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(22, 163, 74, 0.28);
         }
 
         .mark-btn:active {
             transform: translateY(0);
+            box-shadow: 0 3px 8px rgba(22, 163, 74, 0.25);
         }
 
         .stats-card {
@@ -404,14 +408,7 @@
                     </button>
                 </div>
 
-                <p class="subtitle">Only those who have not checked in yet will appear below.</p>
-
-                <div id="loader" class="loader">Loading data…</div>
-                <div id="emptyState" class="empty-state">🎉 Everyone is present! No one outstanding today.</div>
-                <div id="listContainer" class="list-container"></div>
-            </section>
-
-            <aside id="statsBox" class="stats-card">
+                <aside id="statsBox" class="stats-card">
                 <div class="stats-header">
                     <h3 class="stats-title">今日出席统计</h3>
                 </div>
@@ -420,7 +417,14 @@
                     <p>少年人: <strong id="statTeens">0</strong></p>
                     <p>志工 &amp; 导师: <strong id="statMentors">0</strong></p>
                 </div>
-            </aside>
+                </aside>
+
+                <p class="subtitle">Only those who have not checked in yet will appear below.</p>
+
+                <div id="loader" class="loader">Loading data…</div>
+                <div id="emptyState" class="empty-state">🎉 Everyone is present! No one outstanding today.</div>
+                <div id="listContainer" class="list-container"></div>
+            </section>
         </main>
     </div>
 
