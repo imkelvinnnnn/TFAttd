@@ -5,61 +5,267 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TF Attendance Admin</title>
-    <br/>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #ffebee;
+        :root {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e5e7eb;
+            --text: #111827;
+            --text-light: #6b7280;
+
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+
+            --success: #16a34a;
+            --success-bg: #ecfdf5;
+
+            --danger: #dc2626;
+            --danger-bg: #fef2f2;
+
+            --warning: #f59e0b;
+
+            --shadow: 0 4px 16px rgba(0, 0, 0, .06);
+            --radius: 16px;
+        }
+
+        * {
             margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            color: #d32f2f;
-            text-align: center;
-            margin-bottom: 5px;
-        }
-
-        .date-section {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #fff5f5;
-            border-radius: 8px;
-            border: 1px solid #ffcdd2;
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #b71c1c;
-        }
-
-        input[type="date"] {
-            width: 100%;
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-            font-size: 16px;
+            padding: 0;
             box-sizing: border-box;
         }
 
-        p.subtitle {
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* =========================
+    HEADER
+    ========================= */
+
+        .header {
             text-align: center;
-            color: #666;
             margin-bottom: 20px;
         }
 
-        .list-container {
+        .header h1 {
+            font-size: clamp(24px, 4vw, 36px);
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        /* =========================
+    CARD
+    ========================= */
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        /* =========================
+    INPUTS
+    ========================= */
+
+        input,
+        select {
+            width: 100%;
+            height: 48px;
+            padding: 0 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: .2s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, .1);
+        }
+
+        /* =========================
+    ACTION BUTTONS
+    ========================= */
+
+        .action-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .action-row button {
+            border: none;
+            border-radius: 12px;
+            height: 48px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .action-row button:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-absent {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-stats {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-new {
+            background: var(--success);
+            color: white;
+        }
+
+        /* =========================
+    STATS
+    ========================= */
+
+        .stats-box {
+            display: none;
+            background: #fff;
+            border-left: 5px solid var(--primary);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .stats-box h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .stats-box p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 2;
+        }
+
+        .stats-box strong {
+            float: right;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .stat-item {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-num {
+            display: block;
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .stat-lbl {
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        /* =========================
+    TABS
+    ========================= */
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            border: none;
+            background: #f3f4f6;
+            border-radius: 12px;
+            padding: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: .2s;
+        }
+
+        .active-absent {
+            background: var(--danger);
+            color: white;
+        }
+
+        .active-present {
+            background: var(--success);
+            color: white;
+        }
+
+        .count-badge {
+            margin-left: 6px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .2);
+            font-size: 12px;
+        }
+
+        .count-badge.green {
+            background: rgba(255, 255, 255, .2);
+        }
+
+        /* =========================
+    LISTS
+    ========================= */
+
+        .people-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -67,187 +273,474 @@
 
         .person-card {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background: #fff;
-            transition: all 0.3s ease;
+            justify-content: space-between;
+
+            min-height: 64px;
+
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+
+            padding: 14px 16px;
+
+            transition: .25s;
+        }
+
+        .person-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, .08);
+        }
+
+        .absent-card {
+            border-left: 4px solid var(--danger);
+        }
+
+        .present-card {
+            border-left: 4px solid var(--success);
         }
 
         .person-name {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
+            font-size: 16px;
+            font-weight: 600;
+            word-break: break-word;
         }
 
-        .mark-btn {
-            padding: 8px 16px;
-            background-color: #d32f2f;
-            color: white;
+        .action-btn {
+            min-width: 110px;
+            height: 40px;
+
             border: none;
-            border-radius: 6px;
-            font-size: 14px;
+            border-radius: 10px;
+
             cursor: pointer;
+            font-weight: 700;
+            transition: .2s;
         }
 
-        .mark-btn:active {
-            background-color: #b71c1c;
+        .btn-mark-present {
+            background: var(--success);
+            color: white;
         }
+
+        .btn-mark-absent {
+            background: var(--danger);
+            color: white;
+        }
+
+        .action-btn:hover {
+            opacity: .9;
+        }
+
+        .action-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        /* =========================
+    EMPTY
+    ========================= */
 
         .empty-state {
-            text-align: center;
-            color: #2e7d32;
-            font-size: 18px;
-            font-weight: bold;
             display: none;
-            padding: 20px;
+            text-align: center;
+            padding: 32px 16px;
+            color: var(--text-light);
         }
 
         .loader {
             text-align: center;
-            margin-top: 20px;
-            color: #666;
+            padding: 30px;
+            color: var(--text-light);
         }
 
-        .action-btns {
+        /* =========================
+    MODAL
+    ========================= */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+
+            background: rgba(0, 0, 0, .45);
+
             display: flex;
-            gap: 10px;
+            align-items: center;
+            justify-content: center;
+
+            opacity: 0;
+            visibility: hidden;
+
+            transition: .25s;
+            z-index: 999;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            width: min(95%, 500px);
+
+            background: white;
+            border-radius: 20px;
+
+            padding: 24px;
+
+            max-height: 90vh;
+            overflow: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
         }
 
-        .action-btns button {
-            flex: 1;
-            color: white;
+        .modal-header h2 {
+            font-size: 22px;
+        }
+
+        .modal-close {
             border: none;
-            padding: 12px;
-            border-radius: 6px;
+            background: none;
             cursor: pointer;
-            font-weight: bold;
+            font-size: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 52px;
+
+            border: none;
+            border-radius: 12px;
+
+            background: var(--success);
+            color: white;
+
+            font-size: 16px;
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            opacity: .9;
+        }
+
+        /* =========================
+    TOAST
+    ========================= */
+
+        .success-toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+
+            background: #111827;
+            color: white;
+
+            padding: 14px 20px;
+            border-radius: 999px;
+
+            opacity: 0;
+            transition: .3s;
+
+            z-index: 9999;
+        }
+
+        .success-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* =========================
+    ANIMATION
+    ========================= */
+
+        .removing {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .person-card {
+            animation: fadeIn .25s ease;
+        }
+
+        /* =========================
+    TABLET
+    ========================= */
+
+        @media (max-width:768px) {
+
+            body {
+                padding: 12px;
+            }
+
+            .action-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .person-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+        }
+
+        /* =========================
+    LARGE SCREEN
+    ========================= */
+
+        @media (min-width:1024px) {
+
+            #panel-absent,
+            #panel-present {
+                min-height: 500px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
     </style>
+
 </head>
 
 <body>
 
-    <div class="container">
+    <div class="header">
         <h1>TF Attendance Admin</h1>
-        <br/>
-        <div class="date-section">
-            <label for="adminDate">选择日期 Select Date:</label>
-            <input type="date" id="adminDate" onchange="handleDateChange()">
-        </div>
-
-        <div class="action-btns">
-            <button onclick="markAllAbsent()" style="background: #607d8b;">Mark Absent (0)</button>
-            <button id="statsBtn" onclick="generateStats()" style="background: #1976d2;">Generate Stats</button>
-        </div>
-
-        <div id="statsBox" style="display:none; background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #bbdefb;">
-            <h3 style="margin-top: 0; color: #0d47a1;">
-                📊 <span id="displayDate"></span> 少年团出席人数
-            </h3>
-            <p>出席人数: <strong id="statTotal">0</strong><br />
-                少年人: <strong id="statTeens">0</strong><br />
-                志工和导师: <strong id="statMentors">0</strong></p>
-        </div>
-
-        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-
-        <h1>⚠️ Missing List</h1>
-        <p class="subtitle" id="countDisplay">Checking...</p>
-
-        <div id="loader" class="loader">Loading data...</div>
-        <div id="emptyState" class="empty-state">🎉 Everyone is present!</div>
-        <div id="listContainer" class="list-container"></div>
+        <p>Teen Fellowship · Attendance Manager</p>
     </div>
+
+    <!-- Date -->
+    <div class="card">
+        <div class="card-title">📅 Select Date</div>
+        <input type="date" id="adminDate" onchange="handleDateChange()">
+    </div>
+
+    <!-- Actions -->
+    <div class="action-row">
+        <button class="btn-absent" onclick="markAllAbsent()">Mark All Absent</button>
+        <button class="btn-stats" id="statsBtn" onclick="generateStats()">📊 Stats</button>
+        <button class="btn-new" onclick="openNewFriendModal()">➕ New Friend</button>
+    </div>
+
+    <!-- Stats -->
+    <div id="statsBox" class="stats-box">
+        <h3>
+            📊 <span id="displayDate"></span> 少年团出席人数
+        </h3>
+
+        <p>
+            出席人数: <strong id="statTotal">0</strong><br>
+            少年人: <strong id="statTeens">0</strong><br>
+            志工和导师: <strong id="statMentors">0</strong>
+        </p>
+    </div>
+
+    <!-- Attendance Card -->
+    <div class="card">
+        <div class="tabs">
+            <button class="tab-btn active-absent" id="tab-absent" onclick="switchTab('absent')">
+                ❌ Missing <span class="count-badge" id="badge-absent">…</span>
+            </button>
+            <button class="tab-btn" id="tab-present" onclick="switchTab('present')">
+                ✅ Present <span class="count-badge green" id="badge-present">…</span>
+            </button>
+        </div>
+
+        <div id="loader" class="loader">Loading attendance data…</div>
+
+        <!-- Absent panel -->
+        <div id="panel-absent">
+            <div class="empty-state" id="empty-absent">🎉 Everyone is present!</div>
+            <div class="people-list" id="list-absent"></div>
+        </div>
+
+        <!-- Present panel -->
+        <div id="panel-present" style="display:none;">
+            <div class="empty-state" id="empty-present">😶 Nobody marked present yet.</div>
+            <div class="people-list" id="list-present"></div>
+        </div>
+    </div>
+
+    <!-- New Friend Modal -->
+    <div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>➕ New Friend</h2>
+                <button class="modal-close" onclick="closeNewFriendModal()">✕</button>
+            </div>
+
+            <div class="form-group">
+                <label>Chinese Name 华文名</label>
+                <input type="text" id="ff-chinese" placeholder="e.g. 张伟">
+            </div>
+            <div class="form-group">
+                <label>English Name</label>
+                <input type="text" id="ff-english" placeholder="e.g. wei zhang" oninput="autoCapitalize(this)">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select id="ff-gender">
+                        <option value="">-- Select --</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Age 年龄</label>
+                    <input type="number" id="ff-age" min="10" max="25" placeholder="e.g. 15">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Phone Number 电话</label>
+                <input type="tel" id="ff-phone" placeholder="e.g. 0123456789">
+            </div>
+
+            <button class="submit-btn" id="submitNewFriend" onclick="submitNewFriend()">Add & Mark Present ✅</button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="success-toast" id="toast"></div>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwqGl_u5uGICQ6kB_uUDveGLCL7MQW_WahwYE5yTDNBX71P6CJRScTOGom_zeCDYHe-sw/exec";
         const MENTOR_NAMES = ["朱芯薇", "陈学睿", "黄佩盈", "林旻震", "李靖言", "朱芷薇", "杨晋恩", "蔡正安", "周凯荣", "张悠扬", "姚菀婷", "朱凯仪", "陈昭傧", "姚杰恒", "徐铭美"];
 
+        let currentTab = 'absent';
+        let absentList = [];
+        let presentList = [];
+
+        // ── Init ──────────────────────────────────────────
         window.onload = function () {
-            // Initialize Date Picker to Today
             const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            
-            const dateInput = document.getElementById("adminDate");
-            dateInput.value = `${year}-${month}-${day}`;
-            
+            const y = today.getFullYear();
+            const m = String(today.getMonth() + 1).padStart(2, '0');
+            const d = String(today.getDate()).padStart(2, '0');
+            document.getElementById("adminDate").value = `${y}-${m}-${d}`;
             updateDisplayDate();
-            loadMissingList();
+            loadAttendance();
         };
 
         function handleDateChange() {
             updateDisplayDate();
-            document.getElementById("statsBox").style.display = "none"; // Hide old stats
-            loadMissingList();
+            document.getElementById("statsBox").style.display = "none";
+            loadAttendance();
         }
 
         function updateDisplayDate() {
-            const dateVal = document.getElementById("adminDate").value;
-            if (!dateVal) return;
-            const [y, m, d] = dateVal.split('-');
+            const v = document.getElementById("adminDate").value;
+            if (!v) return;
+            const [y, m, d] = v.split('-');
             document.getElementById("displayDate").innerText = `${parseInt(d)}/${parseInt(m)}/${y}`;
         }
 
-        function loadMissingList() {
-            const selectedDate = document.getElementById("adminDate").value;
-            const container = document.getElementById("listContainer");
-            const loader = document.getElementById("loader");
-            const emptyState = document.getElementById("emptyState");
-            const countDisplay = document.getElementById("countDisplay");
+        // ── Load attendance (both lists) ──────────────────
+        function loadAttendance() {
+            const date = document.getElementById("adminDate").value;
+            document.getElementById("loader").style.display = "block";
+            document.getElementById("list-absent").innerHTML = "";
+            document.getElementById("list-present").innerHTML = "";
+            document.getElementById("empty-absent").style.display = "none";
+            document.getElementById("empty-present").style.display = "none";
+            updateBadges('…', '…');
 
-            loader.style.display = "block";
-            container.innerHTML = "";
-            emptyState.style.display = "none";
-            countDisplay.innerText = "Checking...";
-
-            fetch(`${SCRIPT_URL}?action=getMissing&date=${selectedDate}`)
-                .then(response => response.json())
+            fetch(`${SCRIPT_URL}?action=getMissing&date=${date}`)
+                .then(r => r.json())
                 .then(data => {
-                    loader.style.display = "none";
-                    if (data.result === "error") {
-                        alert("Error: " + data.message);
-                        countDisplay.innerText = "Error loading list";
-                        return;
-                    }
-                    renderList(data.data);
+                    document.getElementById("loader").style.display = "none";
+                    if (data.result === "error") { alert("Error: " + data.message); return; }
+                    absentList = data.data || [];
+                    presentList = data.present || [];
+                    renderBothLists();
                 })
-                .catch(err => {
-                    loader.style.display = "none";
+                .catch(() => {
+                    document.getElementById("loader").style.display = "none";
                     alert("Connection Failed");
                 });
         }
 
-        function renderList(names) {
-            const container = document.getElementById("listContainer");
-            const countDisplay = document.getElementById("countDisplay");
-            const emptyState = document.getElementById("emptyState");
+        function renderBothLists() {
+            renderList(absentList, 'list-absent', 'empty-absent', true);
+            renderList(presentList, 'list-present', 'empty-present', false);
+            updateBadges(absentList.length, presentList.length);
+        }
 
-            countDisplay.innerText = names.length + " people outstanding";
+        function renderList(names, containerId, emptyId, isAbsent) {
+            const container = document.getElementById(containerId);
+            const emptyEl = document.getElementById(emptyId);
+            container.innerHTML = "";
 
-            if (names.length === 0) {
-                emptyState.style.display = "block";
-                return;
-            }
+            if (names.length === 0) { emptyEl.style.display = "block"; return; }
+            emptyEl.style.display = "none";
 
             names.forEach(name => {
-                let card = document.createElement("div");
-                card.className = "person-card";
-                card.id = "card-" + name;
+                const card = document.createElement("div");
+                card.className = `person-card ${isAbsent ? 'absent-card' : 'present-card'}`;
+                card.id = (isAbsent ? 'absent-' : 'present-') + name;
 
-                let nameSpan = document.createElement("span");
+                const nameSpan = document.createElement("span");
                 nameSpan.className = "person-name";
                 nameSpan.innerText = name;
 
-                let btn = document.createElement("button");
-                btn.className = "mark-btn";
-                btn.innerText = "Mark Present";
-                btn.onclick = function () { markPerson(name, btn); };
+                const btn = document.createElement("button");
+                if (isAbsent) {
+                    btn.className = "action-btn btn-mark-present";
+                    btn.innerText = "Mark Present";
+                    btn.onclick = () => markPresent(name, btn);
+                } else {
+                    btn.className = "action-btn btn-mark-absent";
+                    btn.innerText = "Mark Absent";
+                    btn.onclick = () => markAbsent(name, btn);
+                }
 
                 card.appendChild(nameSpan);
                 card.appendChild(btn);
@@ -255,71 +748,144 @@
             });
         }
 
-        function markPerson(name, btnElement) {
-            const selectedDate = document.getElementById("adminDate").value;
-            if (!confirm(`Mark ${name} as Present for ${selectedDate}?`)) return;
+        function updateBadges(absent, present) {
+            document.getElementById("badge-absent").innerText = absent;
+            document.getElementById("badge-present").innerText = present;
+        }
 
-            btnElement.innerText = "...";
-            btnElement.disabled = true;
+        // ── Tabs ──────────────────────────────────────────
+        function switchTab(tab) {
+            currentTab = tab;
+            document.getElementById("panel-absent").style.display = tab === 'absent' ? 'block' : 'none';
+            document.getElementById("panel-present").style.display = tab === 'present' ? 'block' : 'none';
+            document.getElementById("tab-absent").className = 'tab-btn' + (tab === 'absent' ? ' active-absent' : '');
+            document.getElementById("tab-present").className = 'tab-btn' + (tab === 'present' ? ' active-present' : '');
+        }
+
+        // ── Mark Present (optimistic) ─────────────────────
+        function markPresent(name, btn) {
+            const date = document.getElementById("adminDate").value;
+
+            // Optimistic: move card immediately
+            btn.disabled = true;
+            btn.innerText = "✓";
+            moveCard(name, 'absent', 'present');
+
+            // Background request
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `name=${encodeURIComponent(name)}&date=${date}&status=1`
+            }).catch(() => {
+                // If failed, move back
+                moveCard(name, 'present', 'absent', true);
+                showToast('❌ Failed to update ' + name);
+            });
+        }
+
+        // ── Mark Absent (optimistic) ──────────────────────
+        function markAbsent(name, btn) {
+            const date = document.getElementById("adminDate").value;
+
+            btn.disabled = true;
+            btn.innerText = "✓";
+            moveCard(name, 'present', 'absent');
 
             fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `name=${encodeURIComponent(name)}&date=${selectedDate}`
-            })
-            .then(() => {
-                const card = document.getElementById("card-" + name);
-                card.style.opacity = "0";
-                setTimeout(() => {
-                    card.remove();
-                    updateCount();
-                }, 300);
-            })
-            .catch(err => {
-                alert("Failed to mark attendance.");
-                btnElement.innerText = "Mark Present";
-                btnElement.disabled = false;
+                body: `name=${encodeURIComponent(name)}&date=${date}&status=0`
+            }).catch(() => {
+                moveCard(name, 'absent', 'present', true);
+                showToast('❌ Failed to update ' + name);
             });
         }
 
-        function updateCount() {
-            const countDisplay = document.getElementById("countDisplay");
-            const remaining = document.querySelectorAll(".person-card").length;
-
-            if (remaining <= 0) {
-                countDisplay.innerText = "0 people outstanding";
-                document.getElementById("emptyState").style.display = "block";
+        // Move a person card between absent ↔ present
+        function moveCard(name, fromList, toList, revert) {
+            // Update data arrays
+            if (fromList === 'absent') {
+                absentList = absentList.filter(n => n !== name);
+                if (!presentList.includes(name)) presentList.push(name);
             } else {
-                countDisplay.innerText = remaining + " people outstanding";
+                presentList = presentList.filter(n => n !== name);
+                if (!absentList.includes(name)) absentList.push(name);
+            }
+
+            // Animate out old card
+            const oldCard = document.getElementById(`${fromList}-${name}`);
+            if (oldCard) {
+                oldCard.classList.add('removing');
+                setTimeout(() => { oldCard.remove(); checkEmpty(fromList); }, 300);
+            }
+
+            // Add new card to target list
+            const isAbsent = (toList === 'absent');
+            const container = document.getElementById(`list-${toList}`);
+            const emptyEl = document.getElementById(`empty-${toList}`);
+            emptyEl.style.display = "none";
+
+            const card = document.createElement("div");
+            card.className = `person-card ${isAbsent ? 'absent-card' : 'present-card'}`;
+            card.id = `${toList}-${name}`;
+            card.style.opacity = "0";
+
+            const nameSpan = document.createElement("span");
+            nameSpan.className = "person-name";
+            nameSpan.innerText = name;
+
+            const btn = document.createElement("button");
+            if (isAbsent) {
+                btn.className = "action-btn btn-mark-present";
+                btn.innerText = "Mark Present";
+                btn.onclick = () => markPresent(name, btn);
+            } else {
+                btn.className = "action-btn btn-mark-absent";
+                btn.innerText = "Mark Absent";
+                btn.onclick = () => markAbsent(name, btn);
+            }
+
+            card.appendChild(nameSpan);
+            card.appendChild(btn);
+            container.prepend(card);
+            requestAnimationFrame(() => { card.style.transition = 'opacity .3s'; card.style.opacity = '1'; });
+
+            updateBadges(absentList.length, presentList.length);
+        }
+
+        function checkEmpty(listId) {
+            const container = document.getElementById(`list-${listId}`);
+            if (container.children.length === 0) {
+                document.getElementById(`empty-${listId}`).style.display = "block";
             }
         }
 
+        // ── Mark All Absent ───────────────────────────────
         function markAllAbsent() {
-            const selectedDate = document.getElementById("adminDate").value;
-            if (!confirm(`Mark everyone remaining as absent (0) for ${selectedDate}?`)) return;
-
-            fetch(`${SCRIPT_URL}?action=markAbsent&date=${selectedDate}`)
+            const date = document.getElementById("adminDate").value;
+            if (!confirm(`Mark everyone remaining as absent (0) for ${date}?`)) return;
+            fetch(`${SCRIPT_URL}?action=markAbsent&date=${date}`)
                 .then(r => r.json())
                 .then(data => {
                     if (data.result === "success") {
-                        alert(`Success: All marked absent for ${selectedDate}`);
-                        loadMissingList();
+                        showToast('✅ All marked absent');
+                        loadAttendance();
                     } else {
                         alert("Error: " + data.message);
                     }
                 });
         }
 
+        // ── Stats ─────────────────────────────────────────
         function generateStats() {
-            const selectedDate = document.getElementById("adminDate").value;
+            const date = document.getElementById("adminDate").value;
             const btn = document.getElementById("statsBtn");
             const mentorParams = encodeURIComponent(MENTOR_NAMES.join(","));
-
-            btn.innerText = "Loading...";
+            btn.innerText = "…";
             btn.disabled = true;
-
-            fetch(`${SCRIPT_URL}?action=getStats&date=${selectedDate}&mentors=${mentorParams}`)
+            fetch(`${SCRIPT_URL}?action=getStats&date=${date}&mentors=${mentorParams}`)
                 .then(r => r.json())
                 .then(data => {
                     if (data.result === "success") {
@@ -331,13 +897,79 @@
                         alert("Error: " + data.message);
                     }
                 })
-                .catch(err => alert("Could not generate stats."))
-                .finally(() => {
-                    btn.innerText = "Generate Stats";
-                    btn.disabled = false;
-                });
+                .catch(() => alert("Could not generate stats."))
+                .finally(() => { btn.innerText = "📊 Stats"; btn.disabled = false; });
+        }
+
+        // ── New Friend Modal ──────────────────────────────
+        function openNewFriendModal() {
+            document.getElementById("modalOverlay").classList.add("open");
+        }
+        function closeNewFriendModal() {
+            document.getElementById("modalOverlay").classList.remove("open");
+        }
+        function handleOverlayClick(e) {
+            if (e.target === document.getElementById("modalOverlay")) closeNewFriendModal();
+        }
+
+        function autoCapitalize(input) {
+            const pos = input.selectionStart;
+            input.value = input.value.replace(/\b\w/g, c => c.toUpperCase());
+            input.setSelectionRange(pos, pos);
+        }
+
+        function submitNewFriend() {
+            const chinese = document.getElementById("ff-chinese").value.trim();
+            const english = document.getElementById("ff-english").value.trim()
+                .replace(/\b\w/g, c => c.toUpperCase());
+            const gender = document.getElementById("ff-gender").value;
+            const age = document.getElementById("ff-age").value.trim();
+            const phone = document.getElementById("ff-phone").value.trim();
+            const date = document.getElementById("adminDate").value;
+
+            if (!chinese && !english) { alert("Please enter at least a Chinese or English name."); return; }
+            if (!gender) { alert("Please select a gender."); return; }
+            if (!age) { alert("Please enter an age."); return; }
+
+            const btn = document.getElementById("submitNewFriend");
+            btn.innerText = "Adding…";
+            btn.disabled = true;
+
+            const params = new URLSearchParams({
+                action: "addNewFriend",
+                chineseName: chinese,
+                englishName: english,
+                gender, age, phone,
+                date
+            });
+
+            fetch(`${SCRIPT_URL}?${params.toString()}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.result === "success") {
+                        closeNewFriendModal();
+                        showToast(`✅ ${english || chinese} added & marked present!`);
+                        // Reset form
+                        ["ff-chinese", "ff-english", "ff-age", "ff-phone"].forEach(id => document.getElementById(id).value = "");
+                        document.getElementById("ff-gender").value = "";
+                        // Refresh list
+                        loadAttendance();
+                    } else {
+                        alert("Error: " + data.message);
+                    }
+                })
+                .catch(() => alert("Failed to add new friend."))
+                .finally(() => { btn.innerText = "Add & Mark Present ✅"; btn.disabled = false; });
+        }
+
+        // ── Toast ─────────────────────────────────────────
+        function showToast(msg) {
+            const t = document.getElementById("toast");
+            t.innerText = msg;
+            t.classList.add("show");
+            setTimeout(() => t.classList.remove("show"), 3000);
         }
     </script>
-
 </body>
+
 </html>
