@@ -618,7 +618,7 @@
             </div>
             <div class="form-group">
                 <label>English Name</label>
-                <input type="text" id="ff-english" placeholder="e.g. wei zhang" oninput="autoCapitalize(this)">
+                <input type="text" id="ff-english" placeholder="e.g. Chong Wei" oninput="autoCapitalize(this)">
             </div>
             <div class="form-row">
                 <div class="form-group">
@@ -631,12 +631,12 @@
                 </div>
                 <div class="form-group">
                     <label>Age 年龄</label>
-                    <input type="number" id="ff-age" min="10" max="25" placeholder="e.g. 15">
+                    <input type="number" id="ff-age" min="12" placeholder="e.g. 15">
                 </div>
             </div>
             <div class="form-group">
                 <label>Phone Number 电话</label>
-                <input type="tel" id="ff-phone" placeholder="e.g. 0123456789">
+                <input type="tel" id="ff-phone" pattern="^01(?:1-\d{4}\s?\d{4}|[0-9]-\d{3}\s?\d{4})$" placeholder="e.g. 012-345 6789">
             </div>
 
             <button class="submit-btn" id="submitNewFriend" onclick="submitNewFriend()">Add & Mark Present ✅</button>
