@@ -546,425 +546,353 @@
 </head>
 
 <body>
-
+<div class="container">
+ 
     <div class="header">
-        <h1>TF Attendance Admin</h1>
-        <p>Teen Fellowship · Attendance Manager</p>
+        <h1>TF Attendance</h1>
     </div>
-
+ 
     <!-- Date -->
     <div class="card">
-        <div class="card-title">📅 Select Date</div>
+        <div class="card-title">📅 Select Date 选择日期</div>
         <input type="date" id="adminDate" onchange="handleDateChange()">
     </div>
-
+ 
     <!-- Actions -->
     <div class="action-row">
         <button class="btn-absent" onclick="markAllAbsent()">Mark All Absent</button>
         <button class="btn-stats" id="statsBtn" onclick="generateStats()">📊 Stats</button>
         <button class="btn-new" onclick="openNewFriendModal()">➕ New Friend</button>
     </div>
-
+ 
     <!-- Stats -->
     <div id="statsBox" class="stats-box">
-        <h3>
-            📊 <span id="displayDate"></span> 少年团出席人数
-        </h3>
-
-        <p>
-            出席人数: <strong id="statTotal">0</strong><br>
-            少年人: <strong id="statTeens">0</strong><br>
-            志工和导师: <strong id="statMentors">0</strong>
-        </p>
+        <h3>📊 <span id="displayDate"></span> 少年团出席人数</h3>
+        <div class="stats-grid">
+            <div class="stat-item"><span class="stat-num" id="statTotal">0</span><span class="stat-lbl">Total 出席</span></div>
+            <div class="stat-item"><span class="stat-num" id="statTeens">0</span><span class="stat-lbl">少年人</span></div>
+            <div class="stat-item"><span class="stat-num" id="statMentors">0</span><span class="stat-lbl">志工 / Mentors</span></div>
+        </div>
     </div>
-
-    <!-- Attendance Card -->
+ 
+    <!-- Attendance card -->
     <div class="card">
         <div class="tabs">
             <button class="tab-btn active-absent" id="tab-absent" onclick="switchTab('absent')">
                 ❌ Missing <span class="count-badge" id="badge-absent">…</span>
             </button>
             <button class="tab-btn" id="tab-present" onclick="switchTab('present')">
-                ✅ Present <span class="count-badge green" id="badge-present">…</span>
+                ✅ Present <span class="count-badge" id="badge-present">…</span>
             </button>
         </div>
-
+ 
         <div id="loader" class="loader">Loading attendance data…</div>
-
-        <!-- Absent panel -->
+ 
         <div id="panel-absent">
             <div class="empty-state" id="empty-absent">🎉 Everyone is present!</div>
             <div class="people-list" id="list-absent"></div>
         </div>
-
-        <!-- Present panel -->
-        <div id="panel-present" style="display:none;">
+        <div id="panel-present" style="display:none">
             <div class="empty-state" id="empty-present">😶 Nobody marked present yet.</div>
             <div class="people-list" id="list-present"></div>
         </div>
     </div>
-
-    <!-- New Friend Modal -->
-    <div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>➕ New Friend</h2>
-                <button class="modal-close" onclick="closeNewFriendModal()">✕</button>
-            </div>
-
-            <div class="form-group">
-                <label>Chinese Name 华文名</label>
-                <input type="text" id="ff-chinese" placeholder="e.g. 张伟">
-            </div>
-            <div class="form-group">
-                <label>English Name</label>
-                <input type="text" id="ff-english" placeholder="e.g. Chong Wei" oninput="autoCapitalize(this)">
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Gender</label>
-                    <select id="ff-gender">
-                        <option value="">-- Select --</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Age 年龄</label>
-                    <input type="number" id="ff-age" min="12" placeholder="e.g. 15">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Phone Number 电话</label>
-                <input type="tel" id="ff-phone" pattern="^01(?:1-\d{4}\s?\d{4}|[0-9]-\d{3}\s?\d{4})$" placeholder="e.g. 012-345 6789">
-            </div>
-
-            <button class="submit-btn" id="submitNewFriend" onclick="submitNewFriend()">Add & Mark Present ✅</button>
+ 
+</div>
+ 
+<!-- New Friend Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>➕ New Friend</h2>
+            <button class="modal-close" onclick="closeNewFriendModal()">✕</button>
         </div>
+        <div class="form-group">
+            <label>Chinese Name 华文名</label>
+            <input type="text" id="ff-chinese" placeholder="e.g. 张伟" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label>English Name</label>
+            <input type="text" id="ff-english" placeholder="e.g. Chong Wei" oninput="autoCapitalize(this)" autocomplete="off">
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Gender</label>
+                <select id="ff-gender">
+                    <option value="">-- Select --</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Age 年龄</label>
+                <input type="number" id="ff-age" min="12" placeholder="e.g. 15">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Phone Number 电话</label>
+            <input type="tel" id="ff-phone" placeholder="e.g. 012-345 6789">
+        </div>
+        <button class="submit-btn" id="submitNewFriend" onclick="submitNewFriend()">Add & Mark Present ✅</button>
     </div>
-
-    <!-- Toast -->
-    <div class="success-toast" id="toast"></div>
-
-    <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwqGl_u5uGICQ6kB_uUDveGLCL7MQW_WahwYE5yTDNBX71P6CJRScTOGom_zeCDYHe-sw/exec";
-        const MENTOR_NAMES = ["朱芯薇", "陈学睿", "黄佩盈", "林旻震", "李靖言", "朱芷薇", "杨晋恩", "蔡正安", "周凯荣", "张悠扬", "姚菀婷", "朱凯仪", "陈昭傧", "姚杰恒", "徐铭美"];
-
-        let currentTab = 'absent';
-        let absentList = [];
-        let presentList = [];
-
-        // ── Init ──────────────────────────────────────────
-        window.onload = function () {
-            const today = new Date();
-            const y = today.getFullYear();
-            const m = String(today.getMonth() + 1).padStart(2, '0');
-            const d = String(today.getDate()).padStart(2, '0');
-            document.getElementById("adminDate").value = `${y}-${m}-${d}`;
-            updateDisplayDate();
-            loadAttendance();
-        };
-
-        function handleDateChange() {
-            updateDisplayDate();
-            document.getElementById("statsBox").style.display = "none";
-            loadAttendance();
+</div>
+ 
+<div class="success-toast" id="toast"></div>
+ 
+<script>
+    const SCRIPT_URL   = "https://script.google.com/macros/s/AKfycbwqGl_u5uGICQ6kB_uUDveGLCL7MQW_WahwYE5yTDNBX71P6CJRScTOGom_zeCDYHe-sw/exec";
+    const MENTOR_NAMES = ["朱芯薇","陈学睿","黄佩盈","林旻震","李靖言","朱芷薇","杨晋恩","蔡正安","周凯荣","张悠扬","姚菀婷","朱凯仪","陈昭傧","姚杰恒","徐铭美"];
+ 
+    // Each entry: { cn: "陈小明", en: "Tan Xiao Ming" }
+    let absentList  = [];
+    let presentList = [];
+ 
+    window.onload = () => {
+        const d = new Date(), z = n => String(n).padStart(2,'0');
+        document.getElementById("adminDate").value = `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`;
+        updateDisplayDate();
+        loadAttendance();
+    };
+ 
+    function handleDateChange() {
+        updateDisplayDate();
+        document.getElementById("statsBox").style.display = "none";
+        loadAttendance();
+    }
+ 
+    function updateDisplayDate() {
+        const v = document.getElementById("adminDate").value; if (!v) return;
+        const [y,m,d] = v.split('-');
+        document.getElementById("displayDate").innerText = `${+d}/${+m}/${y}`;
+    }
+ 
+    /* ── Load ── */
+    function loadAttendance() {
+        const date = document.getElementById("adminDate").value;
+        document.getElementById("loader").style.display = "block";
+        document.getElementById("list-absent").innerHTML  = "";
+        document.getElementById("list-present").innerHTML = "";
+        document.getElementById("empty-absent").style.display  = "none";
+        document.getElementById("empty-present").style.display = "none";
+        updateBadges("…","…");
+ 
+        fetch(`${SCRIPT_URL}?action=getMissing&date=${date}`)
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById("loader").style.display = "none";
+                if (data.result === "error") { alert("Error: " + data.message); return; }
+                // Support both old format (array of strings) and new format (array of {cn,en})
+                absentList  = normalizePeople(data.data    || []);
+                presentList = normalizePeople(data.present || []);
+                renderBothLists();
+            })
+            .catch(() => { document.getElementById("loader").style.display = "none"; alert("Connection Failed"); });
+    }
+ 
+    // If server returns [{cn,en}] objects, keep them; if plain strings, wrap them
+    function normalizePeople(arr) {
+        return arr.map(item => {
+            if (typeof item === "object" && item !== null) return item;
+            return { cn: item, en: "" };
+        });
+    }
+ 
+    function renderBothLists() {
+        renderList(absentList,  "list-absent",  "empty-absent",  true);
+        renderList(presentList, "list-present", "empty-present", false);
+        updateBadges(absentList.length, presentList.length);
+    }
+ 
+    function renderList(people, containerId, emptyId, isAbsent) {
+        const container = document.getElementById(containerId);
+        const emptyEl   = document.getElementById(emptyId);
+        container.innerHTML = "";
+        if (!people.length) { emptyEl.style.display = "block"; return; }
+        emptyEl.style.display = "none";
+        people.forEach(p => container.appendChild(makeCard(p, isAbsent)));
+    }
+ 
+    function makeCard(person, isAbsent) {
+        const { cn, en } = person;
+        const key = cn || en; // unique identifier used for DOM id & API calls
+ 
+        const card = document.createElement("div");
+        card.className = `person-card ${isAbsent ? "absent-card" : "present-card"}`;
+        card.id = (isAbsent ? "absent-" : "present-") + key;
+ 
+        // Name block: Chinese name + English name beneath
+        const nameBlock = document.createElement("div");
+        nameBlock.className = "name-block";
+ 
+        const cnSpan = document.createElement("span");
+        cnSpan.className = "person-name-cn";
+        cnSpan.textContent = cn || en;
+ 
+        nameBlock.appendChild(cnSpan);
+ 
+        if (en) {
+            const enSpan = document.createElement("span");
+            enSpan.className = "person-name-en";
+            enSpan.textContent = " (" + en.toUpperCase() + ")";
+            nameBlock.appendChild(enSpan);
         }
-
-        function updateDisplayDate() {
-            const v = document.getElementById("adminDate").value;
-            if (!v) return;
-            const [y, m, d] = v.split('-');
-            document.getElementById("displayDate").innerText = `${parseInt(d)}/${parseInt(m)}/${y}`;
+ 
+        const btn = document.createElement("button");
+        if (isAbsent) {
+            btn.className = "action-btn btn-mark-present";
+            btn.innerText = "Mark Present";
+            btn.onclick = () => markPresent(person, btn);
+        } else {
+            btn.className = "action-btn btn-mark-absent";
+            btn.innerText = "Mark Absent";
+            btn.onclick = () => markAbsent(person, btn);
         }
-
-        // ── Load attendance (both lists) ──────────────────
-        function loadAttendance() {
-            const date = document.getElementById("adminDate").value;
-            document.getElementById("loader").style.display = "block";
-            document.getElementById("list-absent").innerHTML = "";
-            document.getElementById("list-present").innerHTML = "";
-            document.getElementById("empty-absent").style.display = "none";
-            document.getElementById("empty-present").style.display = "none";
-            updateBadges('…', '…');
-
-            fetch(`${SCRIPT_URL}?action=getMissing&date=${date}`)
-                .then(r => r.json())
-                .then(data => {
-                    document.getElementById("loader").style.display = "none";
-                    if (data.result === "error") { alert("Error: " + data.message); return; }
-                    absentList = data.data || [];
-                    presentList = data.present || [];
-                    renderBothLists();
-                })
-                .catch(() => {
-                    document.getElementById("loader").style.display = "none";
-                    alert("Connection Failed");
-                });
+ 
+        card.appendChild(nameBlock);
+        card.appendChild(btn);
+        return card;
+    }
+ 
+    function updateBadges(absent, present) {
+        document.getElementById("badge-absent").innerText  = absent;
+        document.getElementById("badge-present").innerText = present;
+    }
+ 
+    /* ── Tabs ── */
+    function switchTab(tab) {
+        const a = tab === "absent";
+        document.getElementById("panel-absent").style.display  = a ? "block" : "none";
+        document.getElementById("panel-present").style.display = a ? "none"  : "block";
+        document.getElementById("tab-absent").className  = "tab-btn" + (a  ? " active-absent"  : "");
+        document.getElementById("tab-present").className = "tab-btn" + (!a ? " active-present" : "");
+    }
+ 
+    /* ── Optimistic mark present ── */
+    function markPresent(person, btn) {
+        btn.disabled = true; btn.innerText = "✓";
+        moveCard(person, "absent", "present");
+        fetch(SCRIPT_URL, {
+            method: "POST", mode: "no-cors",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `name=${encodeURIComponent(person.cn || person.en)}&date=${document.getElementById("adminDate").value}&status=1`
+        }).catch(() => { moveCard(person, "present", "absent"); showToast("❌ Failed to update " + (person.cn || person.en)); });
+    }
+ 
+    /* ── Optimistic mark absent ── */
+    function markAbsent(person, btn) {
+        btn.disabled = true; btn.innerText = "✓";
+        moveCard(person, "present", "absent");
+        fetch(SCRIPT_URL, {
+            method: "POST", mode: "no-cors",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `name=${encodeURIComponent(person.cn || person.en)}&date=${document.getElementById("adminDate").value}&status=0`
+        }).catch(() => { moveCard(person, "absent", "present"); showToast("❌ Failed to update " + (person.cn || person.en)); });
+    }
+ 
+    function moveCard(person, from, to) {
+        const key = person.cn || person.en;
+        if (from === "absent") {
+            absentList  = absentList.filter(p => (p.cn || p.en) !== key);
+            if (!presentList.find(p => (p.cn || p.en) === key)) presentList.unshift(person);
+        } else {
+            presentList = presentList.filter(p => (p.cn || p.en) !== key);
+            if (!absentList.find(p => (p.cn || p.en) === key)) absentList.unshift(person);
         }
-
-        function renderBothLists() {
-            renderList(absentList, 'list-absent', 'empty-absent', true);
-            renderList(presentList, 'list-present', 'empty-present', false);
-            updateBadges(absentList.length, presentList.length);
-        }
-
-        function renderList(names, containerId, emptyId, isAbsent) {
-            const container = document.getElementById(containerId);
-            const emptyEl = document.getElementById(emptyId);
-            container.innerHTML = "";
-
-            if (names.length === 0) { emptyEl.style.display = "block"; return; }
-            emptyEl.style.display = "none";
-
-            names.forEach(name => {
-                const card = document.createElement("div");
-                card.className = `person-card ${isAbsent ? 'absent-card' : 'present-card'}`;
-                card.id = (isAbsent ? 'absent-' : 'present-') + name;
-
-                const nameSpan = document.createElement("span");
-                nameSpan.className = "person-name";
-                nameSpan.innerText = name;
-
-                const btn = document.createElement("button");
-                if (isAbsent) {
-                    btn.className = "action-btn btn-mark-present";
-                    btn.innerText = "Mark Present";
-                    btn.onclick = () => markPresent(name, btn);
-                } else {
-                    btn.className = "action-btn btn-mark-absent";
-                    btn.innerText = "Mark Absent";
-                    btn.onclick = () => markAbsent(name, btn);
-                }
-
-                card.appendChild(nameSpan);
-                card.appendChild(btn);
-                container.appendChild(card);
-            });
-        }
-
-        function updateBadges(absent, present) {
-            document.getElementById("badge-absent").innerText = absent;
-            document.getElementById("badge-present").innerText = present;
-        }
-
-        // ── Tabs ──────────────────────────────────────────
-        function switchTab(tab) {
-            currentTab = tab;
-            document.getElementById("panel-absent").style.display = tab === 'absent' ? 'block' : 'none';
-            document.getElementById("panel-present").style.display = tab === 'present' ? 'block' : 'none';
-            document.getElementById("tab-absent").className = 'tab-btn' + (tab === 'absent' ? ' active-absent' : '');
-            document.getElementById("tab-present").className = 'tab-btn' + (tab === 'present' ? ' active-present' : '');
-        }
-
-        // ── Mark Present (optimistic) ─────────────────────
-        function markPresent(name, btn) {
-            const date = document.getElementById("adminDate").value;
-
-            // Optimistic: move card immediately
-            btn.disabled = true;
-            btn.innerText = "✓";
-            moveCard(name, 'absent', 'present');
-
-            // Background request
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `name=${encodeURIComponent(name)}&date=${date}&status=1`
-            }).catch(() => {
-                // If failed, move back
-                moveCard(name, 'present', 'absent', true);
-                showToast('❌ Failed to update ' + name);
-            });
-        }
-
-        // ── Mark Absent (optimistic) ──────────────────────
-        function markAbsent(name, btn) {
-            const date = document.getElementById("adminDate").value;
-
-            btn.disabled = true;
-            btn.innerText = "✓";
-            moveCard(name, 'present', 'absent');
-
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `name=${encodeURIComponent(name)}&date=${date}&status=0`
-            }).catch(() => {
-                moveCard(name, 'absent', 'present', true);
-                showToast('❌ Failed to update ' + name);
-            });
-        }
-
-        // Move a person card between absent ↔ present
-        function moveCard(name, fromList, toList, revert) {
-            // Update data arrays
-            if (fromList === 'absent') {
-                absentList = absentList.filter(n => n !== name);
-                if (!presentList.includes(name)) presentList.push(name);
-            } else {
-                presentList = presentList.filter(n => n !== name);
-                if (!absentList.includes(name)) absentList.push(name);
-            }
-
-            // Animate out old card
-            const oldCard = document.getElementById(`${fromList}-${name}`);
-            if (oldCard) {
-                oldCard.classList.add('removing');
-                setTimeout(() => { oldCard.remove(); checkEmpty(fromList); }, 300);
-            }
-
-            // Add new card to target list
-            const isAbsent = (toList === 'absent');
-            const container = document.getElementById(`list-${toList}`);
-            const emptyEl = document.getElementById(`empty-${toList}`);
-            emptyEl.style.display = "none";
-
-            const card = document.createElement("div");
-            card.className = `person-card ${isAbsent ? 'absent-card' : 'present-card'}`;
-            card.id = `${toList}-${name}`;
-            card.style.opacity = "0";
-
-            const nameSpan = document.createElement("span");
-            nameSpan.className = "person-name";
-            nameSpan.innerText = name;
-
-            const btn = document.createElement("button");
-            if (isAbsent) {
-                btn.className = "action-btn btn-mark-present";
-                btn.innerText = "Mark Present";
-                btn.onclick = () => markPresent(name, btn);
-            } else {
-                btn.className = "action-btn btn-mark-absent";
-                btn.innerText = "Mark Absent";
-                btn.onclick = () => markAbsent(name, btn);
-            }
-
-            card.appendChild(nameSpan);
-            card.appendChild(btn);
-            container.prepend(card);
-            requestAnimationFrame(() => { card.style.transition = 'opacity .3s'; card.style.opacity = '1'; });
-
-            updateBadges(absentList.length, presentList.length);
-        }
-
-        function checkEmpty(listId) {
-            const container = document.getElementById(`list-${listId}`);
-            if (container.children.length === 0) {
-                document.getElementById(`empty-${listId}`).style.display = "block";
-            }
-        }
-
-        // ── Mark All Absent ───────────────────────────────
-        function markAllAbsent() {
-            const date = document.getElementById("adminDate").value;
-            if (!confirm(`Mark everyone remaining as absent (0) for ${date}?`)) return;
-            fetch(`${SCRIPT_URL}?action=markAbsent&date=${date}`)
-                .then(r => r.json())
-                .then(data => {
-                    if (data.result === "success") {
-                        showToast('✅ All marked absent');
-                        loadAttendance();
-                    } else {
-                        alert("Error: " + data.message);
-                    }
-                });
-        }
-
-        // ── Stats ─────────────────────────────────────────
-        function generateStats() {
-            const date = document.getElementById("adminDate").value;
-            const btn = document.getElementById("statsBtn");
-            const mentorParams = encodeURIComponent(MENTOR_NAMES.join(","));
-            btn.innerText = "…";
-            btn.disabled = true;
-            fetch(`${SCRIPT_URL}?action=getStats&date=${date}&mentors=${mentorParams}`)
-                .then(r => r.json())
-                .then(data => {
-                    if (data.result === "success") {
-                        document.getElementById("statsBox").style.display = "block";
-                        document.getElementById("statTotal").innerText = data.total;
-                        document.getElementById("statTeens").innerText = data.teens;
-                        document.getElementById("statMentors").innerText = data.mentors;
-                    } else {
-                        alert("Error: " + data.message);
-                    }
-                })
-                .catch(() => alert("Could not generate stats."))
-                .finally(() => { btn.innerText = "📊 Stats"; btn.disabled = false; });
-        }
-
-        // ── New Friend Modal ──────────────────────────────
-        function openNewFriendModal() {
-            document.getElementById("modalOverlay").classList.add("open");
-        }
-        function closeNewFriendModal() {
-            document.getElementById("modalOverlay").classList.remove("open");
-        }
-        function handleOverlayClick(e) {
-            if (e.target === document.getElementById("modalOverlay")) closeNewFriendModal();
-        }
-
-        function autoCapitalize(input) {
-            const pos = input.selectionStart;
-            input.value = input.value.replace(/\b\w/g, c => c.toUpperCase());
-            input.setSelectionRange(pos, pos);
-        }
-
-        function submitNewFriend() {
-            const chinese = document.getElementById("ff-chinese").value.trim();
-            const english = document.getElementById("ff-english").value.trim()
-                .replace(/\b\w/g, c => c.toUpperCase());
-            const gender = document.getElementById("ff-gender").value;
-            const age = document.getElementById("ff-age").value.trim();
-            const phone = document.getElementById("ff-phone").value.trim();
-            const date = document.getElementById("adminDate").value;
-
-            if (!chinese && !english) { alert("Please enter at least a Chinese or English name."); return; }
-            if (!gender) { alert("Please select a gender."); return; }
-            if (!age) { alert("Please enter an age."); return; }
-
-            const btn = document.getElementById("submitNewFriend");
-            btn.innerText = "Adding…";
-            btn.disabled = true;
-
-            const params = new URLSearchParams({
-                action: "addNewFriend",
-                chineseName: chinese,
-                englishName: english,
-                gender, age, phone,
-                date
-            });
-
-            fetch(`${SCRIPT_URL}?${params.toString()}`)
-                .then(r => r.json())
-                .then(data => {
-                    if (data.result === "success") {
-                        closeNewFriendModal();
-                        showToast(`✅ ${english || chinese} added & marked present!`);
-                        // Reset form
-                        ["ff-chinese", "ff-english", "ff-age", "ff-phone"].forEach(id => document.getElementById(id).value = "");
-                        document.getElementById("ff-gender").value = "";
-                        // Refresh list
-                        loadAttendance();
-                    } else {
-                        alert("Error: " + data.message);
-                    }
-                })
-                .catch(() => alert("Failed to add new friend."))
-                .finally(() => { btn.innerText = "Add & Mark Present ✅"; btn.disabled = false; });
-        }
-
-        // ── Toast ─────────────────────────────────────────
-        function showToast(msg) {
-            const t = document.getElementById("toast");
-            t.innerText = msg;
-            t.classList.add("show");
-            setTimeout(() => t.classList.remove("show"), 3000);
-        }
-    </script>
+        const old = document.getElementById(`${from}-${key}`);
+        if (old) { old.classList.add("removing"); setTimeout(() => { old.remove(); checkEmpty(from); }, 280); }
+ 
+        const isAbsent = to === "absent";
+        const card = makeCard(person, isAbsent);
+        card.style.opacity = "0";
+        document.getElementById(`empty-${to}`).style.display = "none";
+        document.getElementById(`list-${to}`).prepend(card);
+        requestAnimationFrame(() => { card.style.transition = "opacity .28s"; card.style.opacity = "1"; });
+        updateBadges(absentList.length, presentList.length);
+    }
+ 
+    function checkEmpty(list) {
+        if (!document.getElementById(`list-${list}`).children.length)
+            document.getElementById(`empty-${list}`).style.display = "block";
+    }
+ 
+    /* ── Mark all absent ── */
+    function markAllAbsent() {
+        const date = document.getElementById("adminDate").value;
+        if (!confirm(`Mark everyone remaining as absent (0) for ${date}?`)) return;
+        fetch(`${SCRIPT_URL}?action=markAbsent&date=${date}`)
+            .then(r => r.json())
+            .then(d => { if (d.result === "success") { showToast("✅ All marked absent"); loadAttendance(); } else alert("Error: " + d.message); })
+            .catch(() => alert("Connection failed"));
+    }
+ 
+    /* ── Stats ── */
+    function generateStats() {
+        const date = document.getElementById("adminDate").value;
+        const btn  = document.getElementById("statsBtn");
+        btn.innerText = "…"; btn.disabled = true;
+        fetch(`${SCRIPT_URL}?action=getStats&date=${date}&mentors=${encodeURIComponent(MENTOR_NAMES.join(","))}`)
+            .then(r => r.json())
+            .then(d => {
+                if (d.result === "success") {
+                    document.getElementById("statsBox").style.display = "block";
+                    document.getElementById("statTotal").innerText   = d.total;
+                    document.getElementById("statTeens").innerText   = d.teens;
+                    document.getElementById("statMentors").innerText = d.mentors;
+                } else alert("Error: " + d.message);
+            })
+            .catch(() => alert("Could not generate stats."))
+            .finally(() => { btn.innerText = "📊 Stats"; btn.disabled = false; });
+    }
+ 
+    /* ── Modal ── */
+    function openNewFriendModal()  { document.getElementById("modalOverlay").classList.add("open"); }
+    function closeNewFriendModal() { document.getElementById("modalOverlay").classList.remove("open"); }
+    function handleOverlayClick(e) { if (e.target === document.getElementById("modalOverlay")) closeNewFriendModal(); }
+ 
+    function autoCapitalize(input) {
+        const p = input.selectionStart;
+        input.value = input.value.replace(/\b\w/g, c => c.toUpperCase());
+        input.setSelectionRange(p, p);
+    }
+ 
+    function submitNewFriend() {
+        const chinese = document.getElementById("ff-chinese").value.trim();
+        const english = document.getElementById("ff-english").value.trim().replace(/\b\w/g, c => c.toUpperCase());
+        const gender  = document.getElementById("ff-gender").value;
+        const age     = document.getElementById("ff-age").value.trim();
+        const phone   = document.getElementById("ff-phone").value.trim();
+        const date    = document.getElementById("adminDate").value;
+ 
+        if (!chinese && !english) { alert("Please enter at least a Chinese or English name."); return; }
+        if (!gender) { alert("Please select a gender."); return; }
+        if (!age)    { alert("Please enter an age."); return; }
+ 
+        const btn = document.getElementById("submitNewFriend");
+        btn.innerText = "Adding…"; btn.disabled = true;
+ 
+        const params = new URLSearchParams({ action:"addNewFriend", chineseName:chinese, englishName:english, gender, age, phone, date });
+        fetch(`${SCRIPT_URL}?${params.toString()}`)
+            .then(r => r.json())
+            .then(d => {
+                if (d.result === "success") {
+                    closeNewFriendModal();
+                    showToast(`✅ ${english || chinese} added & marked present!`);
+                    ["ff-chinese","ff-english","ff-age","ff-phone"].forEach(id => document.getElementById(id).value = "");
+                    document.getElementById("ff-gender").value = "";
+                    loadAttendance();
+                } else alert("Error: " + d.message);
+            })
+            .catch(() => alert("Failed to add new friend."))
+            .finally(() => { btn.innerText = "Add & Mark Present ✅"; btn.disabled = false; });
+    }
+ 
+    /* ── Toast ── */
+    let _tt;
+    function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.innerText = msg; t.classList.add("show");
+        clearTimeout(_tt); _tt = setTimeout(() => t.classList.remove("show"), 3000);
+    }
+</script>
 </body>
-
 </html>
