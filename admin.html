@@ -1,901 +1,1046 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TF Attendance Admin</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
-        rel="stylesheet">
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --border: #e5e7eb;
-            --text: #111827;
-            --text-light: #6b7280;
+      :root {
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --border: #e5e7eb;
+        --text: #111827;
+        --text-light: #6b7280;
 
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
 
-            --success: #16a34a;
-            --success-bg: #ecfdf5;
+        --success: #16a34a;
+        --success-bg: #ecfdf5;
 
-            --danger: #dc2626;
-            --danger-bg: #fef2f2;
+        --danger: #dc2626;
+        --danger-bg: #fef2f2;
 
-            --warning: #f59e0b;
+        --warning: #f59e0b;
 
-            --shadow: 0 4px 16px rgba(0, 0, 0, .06);
-            --radius: 16px;
-        }
+        --shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        --radius: 16px;
+      }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        html {
-            scroll-behavior: smooth;
-        }
+      html {
+        scroll-behavior: smooth;
+      }
 
-        body {
-            font-family:
-                Inter,
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            padding: 16px;
-        }
+      body {
+        font-family:
+          Inter,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        padding: 16px;
+      }
 
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: auto;
-        }
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: auto;
+      }
 
-        /* =========================
+      /* =========================
     HEADER
     ========================= */
 
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
 
-        .header h1 {
-            font-size: clamp(24px, 4vw, 36px);
-            font-weight: 800;
-            margin-bottom: 4px;
-        }
+      .header h1 {
+        font-size: clamp(24px, 4vw, 36px);
+        font-weight: 800;
+        margin-bottom: 4px;
+      }
 
-        .header p {
-            color: var(--text-light);
-            font-size: 14px;
-        }
+      .header p {
+        color: var(--text-light);
+        font-size: 14px;
+      }
 
-        /* =========================
+      /* =========================
     CARD
     ========================= */
 
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 18px;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow);
-        }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        margin-bottom: 16px;
+        box-shadow: var(--shadow);
+      }
 
-        .card-title {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
+      .card-title {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
 
-        /* =========================
+      /* =========================
     INPUTS
     ========================= */
 
-        input,
-        select {
-            width: 100%;
-            height: 48px;
-            padding: 0 14px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: #fff;
-            font-size: 15px;
-            outline: none;
-            transition: .2s;
-        }
+      input,
+      select {
+        width: 100%;
+        height: 48px;
+        padding: 0 14px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: #fff;
+        font-size: 15px;
+        outline: none;
+        transition: 0.2s;
+      }
 
-        input:focus,
-        select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, .1);
-        }
+      input:focus,
+      select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+      }
 
-        /* =========================
+      /* =========================
     ACTION BUTTONS
     ========================= */
 
-        .action-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 16px;
-        }
+      .action-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 16px;
+      }
 
-        .action-row button {
-            border: none;
-            border-radius: 12px;
-            height: 48px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: .2s;
-        }
+      .action-row button {
+        border: none;
+        border-radius: 12px;
+        height: 48px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+      }
 
-        .action-row button:hover {
-            transform: translateY(-2px);
-        }
+      .action-row button:hover {
+        transform: translateY(-2px);
+      }
 
-        .btn-absent {
-            background: var(--danger);
-            color: white;
-        }
+      .btn-absent {
+        background: var(--danger);
+        color: white;
+      }
 
-        .btn-stats {
-            background: var(--primary);
-            color: white;
-        }
+      .btn-stats {
+        background: var(--primary);
+        color: white;
+      }
 
-        .btn-new {
-            background: var(--success);
-            color: white;
-        }
+      .btn-new {
+        background: var(--success);
+        color: white;
+      }
 
-        /* =========================
+      /* =========================
     STATS
     ========================= */
 
-        .stats-box {
-            display: none;
-            background: #fff;
-            border-left: 5px solid var(--primary);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow);
-        }
+      .stats-box {
+        display: none;
+        background: #fff;
+        border-left: 5px solid var(--primary);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: var(--shadow);
+      }
 
-        .stats-box h3 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
+      .stats-box h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 15px;
+      }
 
-        .stats-box p {
-            margin: 0;
-            font-size: 16px;
-            line-height: 2;
-        }
+      .stats-box p {
+        margin: 0;
+        font-size: 16px;
+        line-height: 2;
+      }
 
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
 
+      .stat-item {
+        background: #f9fafb;
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+      }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
+      .stat-num {
+        display: block;
+        font-size: 28px;
+        font-weight: 800;
+      }
 
-        .stat-item {
-            background: #f9fafb;
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-        }
+      .stat-lbl {
+        color: var(--text-light);
+        font-size: 13px;
+      }
 
-        .stat-num {
-            display: block;
-            font-size: 28px;
-            font-weight: 800;
-        }
-
-        .stat-lbl {
-            color: var(--text-light);
-            font-size: 13px;
-        }
-
-        /* =========================
+      /* =========================
     TABS
     ========================= */
 
-        .tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
+      .tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
 
-        .tab-btn {
-            flex: 1;
-            border: none;
-            background: #f3f4f6;
-            border-radius: 12px;
-            padding: 12px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: .2s;
-        }
+      .tab-btn {
+        flex: 1;
+        border: none;
+        background: #f3f4f6;
+        border-radius: 12px;
+        padding: 12px;
+        cursor: pointer;
+        font-weight: 700;
+        transition: 0.2s;
+      }
 
-        .active-absent {
-            background: var(--danger);
-            color: white;
-        }
+      .active-absent {
+        background: var(--danger);
+        color: white;
+      }
 
-        .active-present {
-            background: var(--success);
-            color: white;
-        }
+      .active-present {
+        background: var(--success);
+        color: white;
+      }
 
-        .count-badge {
-            margin-left: 6px;
-            padding: 3px 8px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, .2);
-            font-size: 12px;
-        }
+      .count-badge {
+        margin-left: 6px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.2);
+        font-size: 12px;
+      }
 
-        .count-badge.green {
-            background: rgba(255, 255, 255, .2);
-        }
+      .count-badge.green {
+        background: rgba(255, 255, 255, 0.2);
+      }
 
-        /* =========================
+      /* =========================
     LISTS
     ========================= */
 
-        .people-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+      .people-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
 
-        .person-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+      .person-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
-            min-height: 64px;
+        min-height: 64px;
 
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 14px;
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 14px;
 
-            padding: 14px 16px;
+        padding: 14px 16px;
 
-            transition: .25s;
-        }
+        transition: 0.25s;
+      }
 
-        .person-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, .08);
-        }
+      .person-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      }
 
-        .absent-card {
-            border-left: 4px solid var(--danger);
-        }
+      .absent-card {
+        border-left: 4px solid var(--danger);
+      }
 
-        .present-card {
-            border-left: 4px solid var(--success);
-        }
+      .present-card {
+        border-left: 4px solid var(--success);
+      }
 
-        .person-name {
-            font-size: 16px;
-            font-weight: 600;
-            word-break: break-word;
-        }
+      .person-name {
+        font-size: 16px;
+        font-weight: 600;
+        word-break: break-word;
+      }
 
-        .action-btn {
-            min-width: 110px;
-            height: 40px;
+      .action-btn {
+        min-width: 110px;
+        height: 40px;
 
-            border: none;
-            border-radius: 10px;
+        border: none;
+        border-radius: 10px;
 
-            cursor: pointer;
-            font-weight: 700;
-            transition: .2s;
-        }
+        cursor: pointer;
+        font-weight: 700;
+        transition: 0.2s;
+      }
 
-        .btn-mark-present {
-            background: var(--success);
-            color: white;
-        }
+      .btn-mark-present {
+        background: var(--success);
+        color: white;
+      }
 
-        .btn-mark-absent {
-            background: var(--danger);
-            color: white;
-        }
+      .btn-mark-absent {
+        background: var(--danger);
+        color: white;
+      }
 
-        .action-btn:hover {
-            opacity: .9;
-        }
+      .action-btn:hover {
+        opacity: 0.9;
+      }
 
-        .action-btn:disabled {
-            opacity: .5;
-            cursor: not-allowed;
-        }
+      .action-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
 
-        /* =========================
+      /* =========================
     EMPTY
     ========================= */
 
-        .empty-state {
-            display: none;
-            text-align: center;
-            padding: 32px 16px;
-            color: var(--text-light);
-        }
+      .empty-state {
+        display: none;
+        text-align: center;
+        padding: 32px 16px;
+        color: var(--text-light);
+      }
 
-        .loader {
-            text-align: center;
-            padding: 30px;
-            color: var(--text-light);
-        }
+      .loader {
+        text-align: center;
+        padding: 30px;
+        color: var(--text-light);
+      }
 
-        /* =========================
+      /* =========================
     MODAL
     ========================= */
 
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
 
-            background: rgba(0, 0, 0, .45);
+        background: rgba(0, 0, 0, 0.45);
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-            opacity: 0;
-            visibility: hidden;
+        opacity: 0;
+        visibility: hidden;
 
-            transition: .25s;
-            z-index: 999;
-        }
+        transition: 0.25s;
+        z-index: 999;
+      }
 
-        .modal-overlay.open {
-            opacity: 1;
-            visibility: visible;
-        }
+      .modal-overlay.open {
+        opacity: 1;
+        visibility: visible;
+      }
 
-        .modal {
-            width: min(95%, 500px);
+      .modal {
+        width: min(95%, 500px);
 
-            background: white;
-            border-radius: 20px;
+        background: white;
+        border-radius: 20px;
 
-            padding: 24px;
+        padding: 24px;
 
-            max-height: 90vh;
-            overflow: auto;
-        }
+        max-height: 90vh;
+        overflow: auto;
+      }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
 
-        .modal-header h2 {
-            font-size: 22px;
-        }
+      .modal-header h2 {
+        font-size: 22px;
+      }
 
-        .modal-close {
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-size: 22px;
-        }
+      .modal-close {
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-size: 22px;
+      }
 
-        .form-group {
-            margin-bottom: 16px;
-        }
+      .form-group {
+        margin-bottom: 16px;
+      }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
 
-        .submit-btn {
-            width: 100%;
-            height: 52px;
+      .submit-btn {
+        width: 100%;
+        height: 52px;
 
-            border: none;
-            border-radius: 12px;
+        border: none;
+        border-radius: 12px;
 
-            background: var(--success);
-            color: white;
+        background: var(--success);
+        color: white;
 
-            font-size: 16px;
-            font-weight: 700;
+        font-size: 16px;
+        font-weight: 700;
 
-            cursor: pointer;
-        }
+        cursor: pointer;
+      }
 
-        .submit-btn:hover {
-            opacity: .9;
-        }
+      .submit-btn:hover {
+        opacity: 0.9;
+      }
 
-        /* =========================
+      /* =========================
     TOAST
     ========================= */
 
-        .success-toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
+      .success-toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
 
-            background: #111827;
-            color: white;
+        background: #111827;
+        color: white;
 
-            padding: 14px 20px;
-            border-radius: 999px;
+        padding: 14px 20px;
+        border-radius: 999px;
 
-            opacity: 0;
-            transition: .3s;
+        opacity: 0;
+        transition: 0.3s;
 
-            z-index: 9999;
-        }
+        z-index: 9999;
+      }
 
-        .success-toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
+      .success-toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
 
-        /* =========================
+      /* =========================
     ANIMATION
     ========================= */
 
-        .removing {
-            opacity: 0;
-            transform: translateX(30px);
+      .removing {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
+      }
 
-        .person-card {
-            animation: fadeIn .25s ease;
-        }
+      .person-card {
+        animation: fadeIn 0.25s ease;
+      }
 
-        /* =========================
+      /* =========================
     TABLET
     ========================= */
 
-        @media (max-width:768px) {
-
-            body {
-                padding: 12px;
-            }
-
-            .action-row {
-                grid-template-columns: 1fr;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .person-card {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-
-            .action-btn {
-                width: 100%;
-            }
+      @media (max-width: 768px) {
+        body {
+          padding: 12px;
         }
 
-        /* =========================
+        .action-row {
+          grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        .person-card {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+
+        .action-btn {
+          width: 100%;
+        }
+      }
+
+      /* =========================
     LARGE SCREEN
     ========================= */
 
-        @media (min-width:1024px) {
-
-            #panel-absent,
-            #panel-present {
-                min-height: 500px;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
+      @media (min-width: 1024px) {
+        #panel-absent,
+        #panel-present {
+          min-height: 500px;
         }
+
+        .stats-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
     </style>
+  </head>
 
-</head>
-
-<body>
-<div class="container">
- 
-    <div class="header">
+  <body>
+    <div class="container">
+      <div class="header">
         <h1>TF Attendance</h1>
-    </div>
- 
-    <!-- Date -->
-    <div class="card">
+      </div>
+
+      <!-- Date -->
+      <div class="card">
         <div class="card-title">📅 Select Date 选择日期</div>
-        <input type="date" id="adminDate" onchange="handleDateChange()">
-    </div>
- 
-    <!-- Actions -->
-    <div class="action-row">
-        <button class="btn-absent" onclick="markAllAbsent()">Mark All Absent</button>
-        <button class="btn-stats" id="statsBtn" onclick="generateStats()">📊 Stats</button>
-        <button class="btn-new" onclick="openNewFriendModal()">➕ New Friend</button>
-    </div>
- 
-    <!-- Stats -->
-    <div id="statsBox" class="stats-box">
-        <h3>
-            📊 <span id="displayDate"></span> 少年团出席人数
-        </h3>
+        <input type="date" id="adminDate" onchange="handleDateChange()" />
+      </div>
+
+      <!-- Actions -->
+      <div class="action-row">
+        <button class="btn-absent" onclick="markAllAbsent()">
+          Mark All Absent
+        </button>
+        <button class="btn-stats" id="statsBtn" onclick="generateStats()">
+          📊 Stats
+        </button>
+        <button class="btn-new" onclick="openNewFriendModal()">
+          ➕ New Friend
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div id="statsBox" class="stats-box">
+        <h3>📊 <span id="displayDate"></span> 少年团出席人数</h3>
 
         <p>
-            出席人数: <strong id="statTotal">0</strong><br>
-            少年人: <strong id="statTeens">0</strong><br>
-            导师和志工: <strong id="statMentors">0</strong>
+          出席人数: <strong id="statTotal">0</strong><br />
+          少年人: <strong id="statTeens">0</strong><br />
+          导师和志工: <strong id="statMentors">0</strong>
         </p>
-    </div>
- 
-    <!-- Attendance card -->
-    <div class="card">
+      </div>
+
+      <!-- Attendance card -->
+      <div class="card">
         <div class="tabs">
-            <button class="tab-btn active-absent" id="tab-absent" onclick="switchTab('absent')">
-                ❌ Missing <span class="count-badge" id="badge-absent">…</span>
-            </button>
-            <button class="tab-btn" id="tab-present" onclick="switchTab('present')">
-                ✅ Present <span class="count-badge" id="badge-present">…</span>
-            </button>
+          <button
+            class="tab-btn active-absent"
+            id="tab-absent"
+            onclick="switchTab('absent')"
+          >
+            ❌ Missing <span class="count-badge" id="badge-absent">…</span>
+          </button>
+          <button
+            class="tab-btn"
+            id="tab-present"
+            onclick="switchTab('present')"
+          >
+            ✅ Present <span class="count-badge" id="badge-present">…</span>
+          </button>
         </div>
- 
+
         <div id="loader" class="loader">Loading attendance data…</div>
- 
+
         <div id="panel-absent">
-            <div class="empty-state" id="empty-absent">🎉 Everyone is present!</div>
-            <div class="people-list" id="list-absent"></div>
+          <div class="empty-state" id="empty-absent">
+            🎉 Everyone is present!
+          </div>
+          <div class="people-list" id="list-absent"></div>
         </div>
-        <div id="panel-present" style="display:none">
-            <div class="empty-state" id="empty-present">😶 Nobody marked present yet.</div>
-            <div class="people-list" id="list-present"></div>
+        <div id="panel-present" style="display: none">
+          <div class="empty-state" id="empty-present">
+            😶 Nobody marked present yet.
+          </div>
+          <div class="people-list" id="list-present"></div>
         </div>
+      </div>
     </div>
- 
-</div>
- 
-<!-- New Friend Modal -->
-<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
-    <div class="modal">
+
+    <!-- New Friend Modal -->
+    <div
+      class="modal-overlay"
+      id="modalOverlay"
+      onclick="handleOverlayClick(event)"
+    >
+      <div class="modal">
         <div class="modal-header">
-            <h2>➕ New Friend</h2>
-            <button class="modal-close" onclick="closeNewFriendModal()">✕</button>
+          <h2>➕ New Friend</h2>
+          <button class="modal-close" onclick="closeNewFriendModal()">✕</button>
         </div>
         <div class="form-group">
-            <label>Chinese Name 华文名</label>
-            <input type="text" id="ff-chinese" placeholder="e.g. 张伟" autocomplete="off">
+          <label>Chinese Name 华文名</label>
+          <input
+            type="text"
+            id="ff-chinese"
+            placeholder="e.g. 张伟"
+            autocomplete="off"
+          />
         </div>
         <div class="form-group">
-            <label>English Name 英文名</label>
-            <input type="text" id="ff-english" placeholder="e.g. Chong Wei" oninput="autoCapitalize(this)" autocomplete="off">
+          <label>English Name 英文名</label>
+          <input
+            type="text"
+            id="ff-english"
+            placeholder="e.g. Chong Wei"
+            oninput="autoCapitalize(this)"
+            autocomplete="off"
+          />
         </div>
         <div class="form-row">
-            <div class="form-group">
-                <label>Gender 性别</label>
-                <select id="ff-gender">
-                    <option value="">-- Select --</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Age 年龄</label>
-                <input type="number" id="ff-age" min="12" placeholder="e.g. 15">
-            </div>
+          <div class="form-group">
+            <label>Gender 性别</label>
+            <select id="ff-gender">
+              <option value="">-- Select --</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Age 年龄</label>
+            <input type="number" id="ff-age" min="12" placeholder="e.g. 15" />
+          </div>
         </div>
         <div class="form-group">
-            <label>Phone Number 电话</label>
-            <input type="tel" id="ff-phone" placeholder="e.g. 012-345 6789">
+          <label>Phone Number 电话</label>
+          <input type="tel" id="ff-phone" placeholder="e.g. 012-345 6789" />
         </div>
-        <button class="submit-btn" id="submitNewFriend" onclick="submitNewFriend()">Add & Mark Present ✅</button>
+        <button
+          class="submit-btn"
+          id="submitNewFriend"
+          onclick="submitNewFriend()"
+        >
+          Add & Mark Present ✅
+        </button>
+      </div>
     </div>
-</div>
- 
-<div class="success-toast" id="toast"></div>
- 
-<script>
-    const SCRIPT_URL   = "https://script.google.com/macros/s/AKfycbwqGl_u5uGICQ6kB_uUDveGLCL7MQW_WahwYE5yTDNBX71P6CJRScTOGom_zeCDYHe-sw/exec";
-    const MENTOR_NAMES = ["朱芯薇","陈学睿","黄佩盈","林旻震","李靖言","朱芷薇","杨晋恩","蔡正安","周凯荣","张悠扬","姚菀婷","朱凯仪","陈昭傧","姚杰恒","徐铭美"];
- 
-    // Each entry: { cn: "陈小明", en: "Tan Xiao Ming" }
-    let absentList  = [];
-    let presentList = [];
- 
-    window.onload = () => {
-        const d = new Date(), z = n => String(n).padStart(2,'0');
-        document.getElementById("adminDate").value = `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`;
+
+    <div class="success-toast" id="toast"></div>
+
+    <script>
+      const SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbwqGl_u5uGICQ6kB_uUDveGLCL7MQW_WahwYE5yTDNBX71P6CJRScTOGom_zeCDYHe-sw/exec";
+      const MENTOR_NAMES = [
+        "朱芯薇",
+        "陈学睿",
+        "黄佩盈",
+        "林旻震",
+        "李靖言",
+        "朱芷薇",
+        "杨晋恩",
+        "蔡正安",
+        "周凯荣",
+        "张悠扬",
+        "姚菀婷",
+        "朱凯仪",
+        "陈昭傧",
+        "姚杰恒",
+        "徐铭美",
+      ];
+
+      // Each entry: { cn: "陈小明", en: "Tan Xiao Ming" }
+      let absentList = [];
+      let presentList = [];
+
+      window.onload = () => {
+        const d = new Date(),
+          z = (n) => String(n).padStart(2, "0");
+        const dateInput = document.getElementById("adminDate");
+        dateInput.value = `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`;
+        if (d.getDay() !== 0) {
+          const sunday = new Date(d);
+          sunday.setDate(d.getDate() - d.getDay());
+          const sundayDate = `${sunday.getFullYear()}-${z(sunday.getMonth() + 1)}-${z(sunday.getDate())}`;
+          if (
+            confirm(
+              `Attendance is recorded on Sunday. Go to the most recent Sunday (${sundayDate})?`,
+            )
+          ) {
+            dateInput.value = sundayDate;
+          }
+        }
         updateDisplayDate();
         loadAttendance();
-    };
- 
-    function handleDateChange() {
+      };
+
+      function handleDateChange() {
         updateDisplayDate();
         document.getElementById("statsBox").style.display = "none";
         loadAttendance();
-    }
- 
-    function updateDisplayDate() {
-        const v = document.getElementById("adminDate").value; if (!v) return;
-        const [y,m,d] = v.split('-');
+      }
+
+      function updateDisplayDate() {
+        const v = document.getElementById("adminDate").value;
+        if (!v) return;
+        const [y, m, d] = v.split("-");
         document.getElementById("displayDate").innerText = `${+d}/${+m}/${y}`;
-    }
- 
-    /* ── Load ── */
-    function loadAttendance() {
+      }
+
+      /* ── Load ── */
+      function loadAttendance() {
         const date = document.getElementById("adminDate").value;
         document.getElementById("loader").style.display = "block";
-        document.getElementById("list-absent").innerHTML  = "";
+        document.getElementById("list-absent").innerHTML = "";
         document.getElementById("list-present").innerHTML = "";
-        document.getElementById("empty-absent").style.display  = "none";
+        document.getElementById("empty-absent").style.display = "none";
         document.getElementById("empty-present").style.display = "none";
-        updateBadges("…","…");
- 
+        updateBadges("…", "…");
+
         fetch(`${SCRIPT_URL}?action=getMissing&date=${date}`)
-            .then(r => r.json())
-            .then(data => {
-                document.getElementById("loader").style.display = "none";
-                if (data.result === "error") { alert("Error: " + data.message); return; }
-                // Support both old format (array of strings) and new format (array of {cn,en})
-                absentList  = normalizePeople(data.data    || []);
-                presentList = normalizePeople(data.present || []);
-                renderBothLists();
-            })
-            .catch(() => { document.getElementById("loader").style.display = "none"; alert("Connection Failed"); });
-    }
- 
-    // If server returns [{cn,en}] objects, keep them; if plain strings, wrap them
-    function normalizePeople(arr) {
-        return arr.map(item => {
-            if (typeof item === "object" && item !== null) return item;
-            return { cn: item, en: "" };
+          .then((r) => r.json())
+          .then((data) => {
+            document.getElementById("loader").style.display = "none";
+            if (data.result === "error") {
+              alert("Error: " + data.message);
+              return;
+            }
+            // Support both old format (array of strings) and new format (array of {cn,en})
+            absentList = normalizePeople(data.data || []);
+            presentList = normalizePeople(data.present || []);
+            renderBothLists();
+          })
+          .catch(() => {
+            document.getElementById("loader").style.display = "none";
+            alert("Connection Failed");
+          });
+      }
+
+      // If server returns [{cn,en}] objects, keep them; if plain strings, wrap them
+      function normalizePeople(arr) {
+        return arr.map((item) => {
+          if (typeof item === "object" && item !== null) return item;
+          return { cn: item, en: "" };
         });
-    }
- 
-    function renderBothLists() {
-        renderList(absentList,  "list-absent",  "empty-absent",  true);
+      }
+
+      function renderBothLists() {
+        renderList(absentList, "list-absent", "empty-absent", true);
         renderList(presentList, "list-present", "empty-present", false);
         updateBadges(absentList.length, presentList.length);
-    }
- 
-    function renderList(people, containerId, emptyId, isAbsent) {
+      }
+
+      function renderList(people, containerId, emptyId, isAbsent) {
         const container = document.getElementById(containerId);
-        const emptyEl   = document.getElementById(emptyId);
+        const emptyEl = document.getElementById(emptyId);
         container.innerHTML = "";
-        if (!people.length) { emptyEl.style.display = "block"; return; }
+        if (!people.length) {
+          emptyEl.style.display = "block";
+          return;
+        }
         emptyEl.style.display = "none";
-        people.forEach(p => container.appendChild(makeCard(p, isAbsent)));
-    }
- 
-    function makeCard(person, isAbsent) {
+        people.forEach((p) => container.appendChild(makeCard(p, isAbsent)));
+      }
+
+      function makeCard(person, isAbsent) {
         const { cn, en } = person;
         const key = cn || en; // unique identifier used for DOM id & API calls
- 
+
         const card = document.createElement("div");
         card.className = `person-card ${isAbsent ? "absent-card" : "present-card"}`;
         card.id = (isAbsent ? "absent-" : "present-") + key;
- 
+
         // Name block: Chinese name + English name beneath
         const nameBlock = document.createElement("div");
         nameBlock.className = "name-block";
- 
+
         const cnSpan = document.createElement("span");
         cnSpan.className = "person-name-cn";
         cnSpan.textContent = cn || en;
- 
+
         nameBlock.appendChild(cnSpan);
- 
+
         if (en) {
-            const enSpan = document.createElement("span");
-            enSpan.className = "person-name-en";
-            enSpan.textContent = " (" + en.toUpperCase() + ")";
-            nameBlock.appendChild(enSpan);
+          const enSpan = document.createElement("span");
+          enSpan.className = "person-name-en";
+          enSpan.textContent = " (" + en.toUpperCase() + ")";
+          nameBlock.appendChild(enSpan);
         }
- 
+
         const btn = document.createElement("button");
         if (isAbsent) {
-            btn.className = "action-btn btn-mark-present";
-            btn.innerText = "Mark Present";
-            btn.onclick = () => markPresent(person, btn);
+          btn.className = "action-btn btn-mark-present";
+          btn.innerText = "Mark Present";
+          btn.onclick = () => markPresent(person, btn);
         } else {
-            btn.className = "action-btn btn-mark-absent";
-            btn.innerText = "Mark Absent";
-            btn.onclick = () => markAbsent(person, btn);
+          btn.className = "action-btn btn-mark-absent";
+          btn.innerText = "Mark Absent";
+          btn.onclick = () => markAbsent(person, btn);
         }
- 
+
         card.appendChild(nameBlock);
         card.appendChild(btn);
         return card;
-    }
- 
-    function updateBadges(absent, present) {
-        document.getElementById("badge-absent").innerText  = absent;
+      }
+
+      function updateBadges(absent, present) {
+        document.getElementById("badge-absent").innerText = absent;
         document.getElementById("badge-present").innerText = present;
-    }
- 
-    /* ── Tabs ── */
-    function switchTab(tab) {
+      }
+
+      /* ── Tabs ── */
+      function switchTab(tab) {
         const a = tab === "absent";
-        document.getElementById("panel-absent").style.display  = a ? "block" : "none";
-        document.getElementById("panel-present").style.display = a ? "none"  : "block";
-        document.getElementById("tab-absent").className  = "tab-btn" + (a  ? " active-absent"  : "");
-        document.getElementById("tab-present").className = "tab-btn" + (!a ? " active-present" : "");
-    }
- 
-    /* ── Optimistic mark present ── */
-    function markPresent(person, btn) {
-        btn.disabled = true; btn.innerText = "✓";
+        document.getElementById("panel-absent").style.display = a
+          ? "block"
+          : "none";
+        document.getElementById("panel-present").style.display = a
+          ? "none"
+          : "block";
+        document.getElementById("tab-absent").className =
+          "tab-btn" + (a ? " active-absent" : "");
+        document.getElementById("tab-present").className =
+          "tab-btn" + (!a ? " active-present" : "");
+      }
+
+      /* ── Optimistic mark present ── */
+      function markPresent(person, btn) {
+        btn.disabled = true;
+        btn.innerText = "✓";
         moveCard(person, "absent", "present");
         fetch(SCRIPT_URL, {
-            method: "POST", mode: "no-cors",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `name=${encodeURIComponent(person.cn || person.en)}&date=${document.getElementById("adminDate").value}&status=1`
-        }).catch(() => { moveCard(person, "present", "absent"); showToast("❌ Failed to update " + (person.cn || person.en)); });
-    }
- 
-    /* ── Optimistic mark absent ── */
-    function markAbsent(person, btn) {
-        btn.disabled = true; btn.innerText = "✓";
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: `name=${encodeURIComponent(person.cn || person.en)}&date=${document.getElementById("adminDate").value}&status=1`,
+        }).catch(() => {
+          moveCard(person, "present", "absent");
+          showToast("❌ Failed to update " + (person.cn || person.en));
+        });
+      }
+
+      /* ── Optimistic mark absent ── */
+      function markAbsent(person, btn) {
+        btn.disabled = true;
+        btn.innerText = "✓";
         moveCard(person, "present", "absent");
         fetch(SCRIPT_URL, {
-            method: "POST", mode: "no-cors",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `name=${encodeURIComponent(person.cn || person.en)}&date=${document.getElementById("adminDate").value}&status=0`
-        }).catch(() => { moveCard(person, "absent", "present"); showToast("❌ Failed to update " + (person.cn || person.en)); });
-    }
- 
-    function moveCard(person, from, to) {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: `name=${encodeURIComponent(person.cn || person.en)}&date=${document.getElementById("adminDate").value}&status=0`,
+        }).catch(() => {
+          moveCard(person, "absent", "present");
+          showToast("❌ Failed to update " + (person.cn || person.en));
+        });
+      }
+
+      function moveCard(person, from, to) {
         const key = person.cn || person.en;
         if (from === "absent") {
-            absentList  = absentList.filter(p => (p.cn || p.en) !== key);
-            if (!presentList.find(p => (p.cn || p.en) === key)) presentList.unshift(person);
+          absentList = absentList.filter((p) => (p.cn || p.en) !== key);
+          if (!presentList.find((p) => (p.cn || p.en) === key))
+            presentList.unshift(person);
         } else {
-            presentList = presentList.filter(p => (p.cn || p.en) !== key);
-            if (!absentList.find(p => (p.cn || p.en) === key)) absentList.unshift(person);
+          presentList = presentList.filter((p) => (p.cn || p.en) !== key);
+          if (!absentList.find((p) => (p.cn || p.en) === key))
+            absentList.unshift(person);
         }
         const old = document.getElementById(`${from}-${key}`);
-        if (old) { old.classList.add("removing"); setTimeout(() => { old.remove(); checkEmpty(from); }, 280); }
- 
+        if (old) {
+          old.classList.add("removing");
+          setTimeout(() => {
+            old.remove();
+            checkEmpty(from);
+          }, 280);
+        }
+
         const isAbsent = to === "absent";
         const card = makeCard(person, isAbsent);
         card.style.opacity = "0";
         document.getElementById(`empty-${to}`).style.display = "none";
         document.getElementById(`list-${to}`).prepend(card);
-        requestAnimationFrame(() => { card.style.transition = "opacity .28s"; card.style.opacity = "1"; });
+        requestAnimationFrame(() => {
+          card.style.transition = "opacity .28s";
+          card.style.opacity = "1";
+        });
         updateBadges(absentList.length, presentList.length);
-    }
- 
-    function checkEmpty(list) {
+      }
+
+      function checkEmpty(list) {
         if (!document.getElementById(`list-${list}`).children.length)
-            document.getElementById(`empty-${list}`).style.display = "block";
-    }
- 
-    /* ── Mark all absent ── */
-    function markAllAbsent() {
+          document.getElementById(`empty-${list}`).style.display = "block";
+      }
+
+      /* ── Mark all absent ── */
+      function markAllAbsent() {
         const date = document.getElementById("adminDate").value;
-        if (!confirm(`Mark everyone remaining as absent (0) for ${date}?`)) return;
+        if (!confirm(`Mark everyone remaining as absent (0) for ${date}?`))
+          return;
         fetch(`${SCRIPT_URL}?action=markAbsent&date=${date}`)
-            .then(r => r.json())
-            .then(d => { if (d.result === "success") { showToast("✅ All marked absent"); loadAttendance(); } else alert("Error: " + d.message); })
-            .catch(() => alert("Connection failed"));
-    }
- 
-    /* ── Stats ── */
-    function generateStats() {
+          .then((r) => r.json())
+          .then((d) => {
+            if (d.result === "success") {
+              showToast("✅ All marked absent");
+              loadAttendance();
+            } else alert("Error: " + d.message);
+          })
+          .catch(() => alert("Connection failed"));
+      }
+
+      /* ── Stats ── */
+      function generateStats() {
         const date = document.getElementById("adminDate").value;
-        const btn  = document.getElementById("statsBtn");
-        btn.innerText = "…"; btn.disabled = true;
-        fetch(`${SCRIPT_URL}?action=getStats&date=${date}&mentors=${encodeURIComponent(MENTOR_NAMES.join(","))}`)
-            .then(r => r.json())
-            .then(d => {
-                if (d.result === "success") {
-                    document.getElementById("statsBox").style.display = "block";
-                    document.getElementById("statTotal").innerText   = d.total;
-                    document.getElementById("statTeens").innerText   = d.teens;
-                    document.getElementById("statMentors").innerText = d.mentors;
-                } else alert("Error: " + d.message);
-            })
-            .catch(() => alert("Could not generate stats."))
-            .finally(() => { btn.innerText = "📊 Stats"; btn.disabled = false; });
-    }
- 
-    /* ── Modal ── */
-    function openNewFriendModal()  { document.getElementById("modalOverlay").classList.add("open"); }
-    function closeNewFriendModal() { document.getElementById("modalOverlay").classList.remove("open"); }
-    function handleOverlayClick(e) { if (e.target === document.getElementById("modalOverlay")) closeNewFriendModal(); }
- 
-    function autoCapitalize(input) {
+        const btn = document.getElementById("statsBtn");
+        btn.innerText = "…";
+        btn.disabled = true;
+        fetch(
+          `${SCRIPT_URL}?action=getStats&date=${date}&mentors=${encodeURIComponent(MENTOR_NAMES.join(","))}`,
+        )
+          .then((r) => r.json())
+          .then((d) => {
+            if (d.result === "success") {
+              document.getElementById("statsBox").style.display = "block";
+              document.getElementById("statTotal").innerText = d.total;
+              document.getElementById("statTeens").innerText = d.teens;
+              document.getElementById("statMentors").innerText = d.mentors;
+            } else alert("Error: " + d.message);
+          })
+          .catch(() => alert("Could not generate stats."))
+          .finally(() => {
+            btn.innerText = "📊 Stats";
+            btn.disabled = false;
+          });
+      }
+
+      /* ── Modal ── */
+      function openNewFriendModal() {
+        document.getElementById("modalOverlay").classList.add("open");
+      }
+      function closeNewFriendModal() {
+        document.getElementById("modalOverlay").classList.remove("open");
+      }
+      function handleOverlayClick(e) {
+        if (e.target === document.getElementById("modalOverlay"))
+          closeNewFriendModal();
+      }
+
+      function autoCapitalize(input) {
         const p = input.selectionStart;
-        input.value = input.value.replace(/\b\w/g, c => c.toUpperCase());
+        input.value = input.value.replace(/\b\w/g, (c) => c.toUpperCase());
         input.setSelectionRange(p, p);
-    }
- 
-    function submitNewFriend() {
+      }
+
+      function submitNewFriend() {
         const chinese = document.getElementById("ff-chinese").value.trim();
-        const english = document.getElementById("ff-english").value.trim().replace(/\b\w/g, c => c.toUpperCase());
-        const gender  = document.getElementById("ff-gender").value;
-        const age     = document.getElementById("ff-age").value.trim();
-        const phone   = document.getElementById("ff-phone").value.trim();
-        const date    = document.getElementById("adminDate").value;
- 
-        if (!chinese && !english) { alert("Please enter at least a Chinese or English name."); return; }
-        if (!gender) { alert("Please select a gender."); return; }
-        if (!age)    { alert("Please enter an age."); return; }
- 
+        const english = document
+          .getElementById("ff-english")
+          .value.trim()
+          .replace(/\b\w/g, (c) => c.toUpperCase());
+        const gender = document.getElementById("ff-gender").value;
+        const age = document.getElementById("ff-age").value.trim();
+        const phone = document.getElementById("ff-phone").value.trim();
+        const date = document.getElementById("adminDate").value;
+
+        if (!chinese && !english) {
+          alert("Please enter at least a Chinese or English name.");
+          return;
+        }
+        if (!gender) {
+          alert("Please select a gender.");
+          return;
+        }
+        if (!age) {
+          alert("Please enter an age.");
+          return;
+        }
+
         const btn = document.getElementById("submitNewFriend");
-        btn.innerText = "Adding…"; btn.disabled = true;
- 
-        const params = new URLSearchParams({ action:"addNewFriend", chineseName:chinese, englishName:english, gender, age, phone, date });
+        btn.innerText = "Adding…";
+        btn.disabled = true;
+
+        const params = new URLSearchParams({
+          action: "addNewFriend",
+          chineseName: chinese,
+          englishName: english,
+          gender,
+          age,
+          phone,
+          date,
+        });
         fetch(`${SCRIPT_URL}?${params.toString()}`)
-            .then(r => r.json())
-            .then(d => {
-                if (d.result === "success") {
-                    closeNewFriendModal();
-                    showToast(`✅ ${english || chinese} added & marked present!`);
-                    ["ff-chinese","ff-english","ff-age","ff-phone"].forEach(id => document.getElementById(id).value = "");
-                    document.getElementById("ff-gender").value = "";
-                    loadAttendance();
-                } else alert("Error: " + d.message);
-            })
-            .catch(() => alert("Failed to add new friend."))
-            .finally(() => { btn.innerText = "Add & Mark Present ✅"; btn.disabled = false; });
-    }
- 
-    /* ── Toast ── */
-    let _tt;
-    function showToast(msg) {
+          .then((r) => r.json())
+          .then((d) => {
+            if (d.result === "success") {
+              closeNewFriendModal();
+              showToast(`✅ ${english || chinese} added & marked present!`);
+              ["ff-chinese", "ff-english", "ff-age", "ff-phone"].forEach(
+                (id) => (document.getElementById(id).value = ""),
+              );
+              document.getElementById("ff-gender").value = "";
+              loadAttendance();
+            } else alert("Error: " + d.message);
+          })
+          .catch(() => alert("Failed to add new friend."))
+          .finally(() => {
+            btn.innerText = "Add & Mark Present ✅";
+            btn.disabled = false;
+          });
+      }
+
+      /* ── Toast ── */
+      let _tt;
+      function showToast(msg) {
         const t = document.getElementById("toast");
-        t.innerText = msg; t.classList.add("show");
-        clearTimeout(_tt); _tt = setTimeout(() => t.classList.remove("show"), 3000);
-    }
-</script>
-</body>
+        t.innerText = msg;
+        t.classList.add("show");
+        clearTimeout(_tt);
+        _tt = setTimeout(() => t.classList.remove("show"), 3000);
+      }
+    </script>
+  </body>
 </html>
